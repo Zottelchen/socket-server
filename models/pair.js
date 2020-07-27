@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 let pairSchema = new Schema({
@@ -10,11 +11,5 @@ let pairSchema = new Schema({
     ref: 'user'
   }
 });
-
-pairSchema.methods.addUsers = (userA_id, userB_id) => {
-  this.userA = userA_id;
-  this.userB = userB_id;
-  return this.save();
-};
 
 module.exports = mongoose.model('pair', pairSchema);

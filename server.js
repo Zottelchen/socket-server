@@ -3,8 +3,10 @@ const http = require('http');
 const WebSocket = require('ws');
 const mongoose = require('mongoose');
 
+// Setup port
 const port = process.env.PORT || 5000;
 
+// Connect to DB
 mongoose.connect(
   process.env.MONGODB_URI || 'mongodb://localhost/node-testing',
   { useNewUrlParser: true,  useUnifiedTopology: true },
@@ -16,10 +18,9 @@ mongoose.connect(
     }
 });
 
+// Create HTTP and WS server.
 const app = express();
-
 const server = http.createServer(app);
-
 const wss = new WebSocket.Server({ server });
 
 wss.on('connection', (ws) => {
@@ -33,11 +34,17 @@ wss.on('connection', (ws) => {
   });
 });
 
+// HTTP root.
 app.get('/', function (req, res) {
   res.send('Hello World')
 })
 
-let listener = server.listen(port, () => {
+// Routes
+const pairs = require('./routes/pairs');
+app.use('/api/', pairs);
+
+// Start server.
+const listener = server.listen(port, () => {
   console.log(`INFO: Server started on port ${port}.`);
 });
 

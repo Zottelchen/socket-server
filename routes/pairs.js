@@ -1,9 +1,12 @@
 const express = require('express');
 const router = express.Router();
+const bodyParser = require('body-parser');
 const User = require('../models/user');
 const Pair = require('../models/pair');
 
-router.post('/pairs/', getUserAId, getUserBId, addPair);
+const jsonParser = bodyParser.json();
+
+router.post('/pairs', jsonParser, getUserAId, getUserBId, addPair);
 
 function getUserAId(req, res, next) {
   User.findOne({macAddress: req.body.macAddressA})
@@ -17,10 +20,10 @@ function getUserAId(req, res, next) {
         macAddress: req.body.macAddressA,
         socketUuid: null
       });
-      newUser.save((err, data) => {
+      newUser.save((_err, data) => {
         if (_err) {
           console.log("ERROR: Could not save user.");
-          res.json('ERROR': _err);
+          res.json({'ERROR': _err});
         } else {
           console.log('INFO: Created new user with id ' + data.id);
           res.locals.userA_id = data.id;
@@ -29,7 +32,7 @@ function getUserAId(req, res, next) {
       });
     } else {
       console.log('INFO: Found user in DB.');
-      res.locals.userA_id = data.id;
+      res.locals.userA_id = user.id;
       next();
     }
   });
@@ -47,10 +50,10 @@ function getUserBId(req, res, next) {
         macAddress: req.body.macAddressB,
         socketUuid: null
       });
-      newUser.save((err, data) => {
+      newUser.save((_err, data) => {
         if (_err) {
           console.log("ERROR: Could not save user.");
-          res.json('ERROR': _err);
+          res.json({'ERROR': _err});
         } else {
           console.log('INFO: Created new user with id ' + data.id);
           res.locals.userB_id = data.id;
@@ -59,23 +62,24 @@ function getUserBId(req, res, next) {
       });
     } else {
       console.log('INFO: Found user in DB.');
-      res.locals.userB_id = data.id;
+      res.locals.userB_id = user.id;
       next();
     }
   });
 }
 
 function addPair(req, res) {
-  let newPair = new Pair();
+  let newPair = new Pair({
+    userA: res.locals.userA_id,
+    userB: res.locals.userB_id
+  });
   newPair.save((err, pair) => {
     if (err) {
       res.json({'ERROR': err});
     } else {
-      pair.addUsers(res.locals.userA_id, res.locals.userB_id)
-      .then((_pair) => {
-        console.log('INFO: Successfully added pair.');
-        res.json({'SUCCESS': _pair});
-      });
+      res.json({'SUCCESS': pair});
     }
   });
 }
+
+module.exports = router;
