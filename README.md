@@ -5,12 +5,6 @@ addresses as the destination address.
 
 ## Installation (local)
 
-1. Install packages
-
-`npm install`
-
+1. Install packages with `npm install`
 2. [Install mongodb](https://docs.mongodb.com/manual/installation/)
-
-3. Run server
-
-  npm start
+3. Run server with `npm start`
