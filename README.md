@@ -7,7 +7,7 @@ addresses as the destination address.
 
 1. Install packages
 
-  npm install
+`npm install`
 
 2. [Install mongodb](https://docs.mongodb.com/manual/installation/)
 
