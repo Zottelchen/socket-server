@@ -73,11 +73,13 @@ module.exports = (io) => {
       .exec((err, user) => {
         if (err) {
           console.log("ERROR: Could not search.");
-        } else {
+        } else if (user) {
           user.socketUuid = null;
           user.save((_err, data) => {
             console.log(`INFO: Erased socket id of ${data.macAddress}.`);
           });
+        } else {
+          console.log("WARN: Could not find user after disconnecting.");
         }
       });
     });
