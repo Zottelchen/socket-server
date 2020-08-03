@@ -1,4 +1,4 @@
-# SCADS Socket Server
+# IRS Socket Server
 
 Socket server for forwarding socket.io messages between clients, using MAC
 addresses as the destination address.
