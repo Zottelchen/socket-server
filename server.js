@@ -36,6 +36,9 @@ app.get('/', function (req, res) {
   res.send('Hello World');
 });
 
+const update = require('./routes/update');
+app.use('/', update);
+
 // socket.io server
 const socketConfig = require('./socket-config');
 let io = require('socket.io')(server);

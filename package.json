@@ -1,7 +1,8 @@
 {
-  "name": "scads-socket-server",
+  "name": "irs-socket-server",
   "version": "1.0.0",
   "description": "Socket server for passing messages between devices",
+  "repository": "https://github.com/interactionresearchstudio/socket-server",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -10,6 +11,7 @@
   "author": "Mike Vanis",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.19.2",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "mongoose": "^5.9.25",
