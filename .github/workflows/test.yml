@@ -1,4 +1,4 @@
-name: Test server
+name: Build
 
 on: [push]
 

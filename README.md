@@ -1,4 +1,5 @@
 # IRS Socket Server
+![Build status](https://github.com/interactionresearchstudio/socket-server/workflows/Test+server/badge.svg)
 
 Socket server for forwarding socket.io messages between clients, using MAC
 addresses as the destination address.
