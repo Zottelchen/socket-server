@@ -76,7 +76,7 @@ module.exports = (io) => {
         } else if (user) {
           user.socketUuid = null;
           user.save((_err, data) => {
-            console.log(`INFO: Erased socket id of ${data.macAddress}.`);
+            console.log(`INFO: Erased socket id of ${user.macAddress}.`);
           });
         } else {
           console.log("WARN: Could not find user after disconnecting.");

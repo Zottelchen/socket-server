@@ -45,8 +45,10 @@ let io = require('socket.io')(server);
 socketConfig(io);
 
 // Start server
-const listener = server.listen(port, () => {
-  console.log(`INFO: Server started on port ${port}.`);
-});
+server.start = () => {
+  server.listen(port, () => {
+    console.log(`INFO: Server started on port ${port}.`);
+  });
+};
 
 module.exports = server;
