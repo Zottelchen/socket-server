@@ -23,6 +23,7 @@ mongoose.connect(
           });
         })
       });
+      console.log('INFO: Wiped socketUuids');
     }
 });
 

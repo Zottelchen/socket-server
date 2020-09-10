@@ -1,15 +1,37 @@
 const express = require('express');
 const axios = require('axios');
+const fs = require('fs');
 const router = express.Router();
 
-router.get('/update', getTags, sendBinary);
+router.get('/update/:slug', getUrl, getTags, sendBinary);
+router.get('/projects', getProjects);
+
+function getProjects(req, res) {
+  res.sendFile('./projects.json', { root: __dirname });
+}
+
+function getUrl(req, res, next) {
+  fs.readFile(__dirname + '/projects.json', (err, data) => {
+    if (err) throw err;
+    let projectsDocument = JSON.parse(data);
+    res.locals.project = projectsDocument.projects.find(project => {
+      return project.slug === req.params.slug;
+    });
+    if (res.locals.project !== undefined) {
+      console.log(res.locals.project.releaseUrl);
+      next();
+    } else {
+      res.sendStatus(400);
+    }
+  });
+}
 
 // Get available tags from GitHub repository.
 function getTags(req, res, next) {
-  axios.get(process.env.GITHUB_FIRMWARE_REPOSITORY_API_URL)
+  axios.get(res.locals.project.releaseUrl)
   .then(response => {
-    console.log("Latest release tag: " + response.data.tag_name + " | Asset URL: " + response.data.assets[0].browser_download_url);
-    res.locals.release = response.data;
+    console.log("Latest release tag: " + response.data[0].tag_name + " | Asset URL: " + response.data[0].assets[0].browser_download_url);
+    res.locals.release = response.data[0];
     next();
   })
   .catch(error => {
@@ -39,7 +61,8 @@ function sendBinary(req, res) {
       responseType: 'stream'
     })
     .then((response) => {
-      response.data.pipe(res)
+      console.log("INFO: Piping file to device...");
+      response.data.pipe(res);
     });
   } else {
     console.log("WARN: semver comparison returned null. One of them is invalid! Returning 500...");

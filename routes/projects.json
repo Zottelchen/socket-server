@@ -1,0 +1,9 @@
+{
+  "projects": [
+    {
+      "name": "Light Touch",
+      "slug": "ESP32-SOCKETIO",
+      "releaseUrl": "https://api.github.com/repos/interactionresearchstudio/ESP32-SOCKETIO/releases"
+    }
+  ]
+}
