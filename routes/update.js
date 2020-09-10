@@ -43,10 +43,14 @@ function getTags(req, res, next) {
 
 // Check ESP version and send binary file.
 function sendBinary(req, res) {
-  let espVersion = req.get('x-ESP8266-version');
+  let espVersion = req.get('x-ESP32-version');
   console.log("INFO: Firmware version: " + espVersion);
   let latestVersion = res.locals.release.tag_name;
   console.log("INFO: Latest version: " + latestVersion);
+  if (espVersion == undefined) {
+    console.log("WARNING: Device did not send firmware version.");
+    res.sendStatus(400);
+  }
   if (espVersion.charAt(0) === 'v') espVersion = espVersion.substring(1);
   if (latestVersion.charAt(0) === 'v') latestVersion = latestVersion.substring(1);
   if (versionCompare(espVersion, latestVersion) >= 0) {
