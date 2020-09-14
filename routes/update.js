@@ -30,8 +30,17 @@ function getUrl(req, res, next) {
 function getTags(req, res, next) {
   axios.get(res.locals.project.releaseUrl)
   .then(response => {
-    console.log("Latest release tag: " + response.data[0].tag_name + " | Asset URL: " + response.data[0].assets[0].browser_download_url);
     res.locals.release = response.data[0];
+    res.locals.asset = res.locals.release.assets.find(asset => {
+      return asset.name === "app.bin";
+    });
+    if (res.locals.asset === undefined) {
+      console.log("WARN: No app.bin found in release assets!");
+      res.sendStatus(500);
+    }
+
+    console.log("INFO: Latest release tag: " + res.locals.release.tag_name + " | Asset URL: " + res.locals.asset.browser_download_url);
+
     next();
   })
   .catch(error => {
@@ -48,7 +57,7 @@ function sendBinary(req, res) {
   let latestVersion = res.locals.release.tag_name;
   console.log("INFO: Latest version: " + latestVersion);
   if (espVersion == undefined) {
-    console.log("WARNING: Device did not send firmware version.");
+    console.log("WARN: Device did not send firmware version.");
     res.sendStatus(400);
   }
   if (espVersion.charAt(0) === 'v') espVersion = espVersion.substring(1);
@@ -58,7 +67,8 @@ function sendBinary(req, res) {
     res.sendStatus(304);
   } else if (versionCompare(espVersion, latestVersion) < 0) {
     console.log("INFO: Update required");
-    let downloadUrl = res.locals.release.assets[0].browser_download_url;
+
+    let downloadUrl = res.locals.asset.browser_download_url;
     axios({
       method: 'get',
       url: downloadUrl,
