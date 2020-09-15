@@ -51,7 +51,7 @@ function getTags(req, res, next) {
 }
 
 // Check ESP version and send binary file.
-function sendBinary(req, res) {
+async function sendBinary(req, res) {
   let espVersion = req.get('x-ESP32-version');
   console.log("INFO: Firmware version: " + espVersion);
   let latestVersion = res.locals.release.tag_name;
@@ -69,17 +69,21 @@ function sendBinary(req, res) {
     console.log("INFO: Update required");
 
     let downloadUrl = res.locals.asset.browser_download_url;
+
     axios({
       method: 'get',
       url: downloadUrl,
-      responseType: 'blob'
+      responseType: 'stream'
     })
     .then((response) => {
-      console.log("INFO: Piping file to device...");
-      response.data.pipe(res);
+      if (response.data) {
+        console.log("INFO: Piping file to device...");
+        response.data.pipe(res);
+      }
     })
     .catch((error) => {
       console.log("ERROR: Could not get bin file from GitHub.");
+      console.log(error);
       res.sendStatus(500);
     });
   } else {
