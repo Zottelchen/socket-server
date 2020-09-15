@@ -72,11 +72,15 @@ function sendBinary(req, res) {
     axios({
       method: 'get',
       url: downloadUrl,
-      responseType: 'stream'
+      responseType: 'blob'
     })
     .then((response) => {
       console.log("INFO: Piping file to device...");
       response.data.pipe(res);
+    })
+    .catch((error) => {
+      console.log("ERROR: Could not get bin file from GitHub.");
+      res.sendStatus(500);
     });
   } else {
     console.log("WARN: semver comparison returned null. One of them is invalid! Returning 500...");
