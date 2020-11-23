@@ -22,13 +22,14 @@ describe('Root', () => {
       });
   });
 
-  it('should return the latest binary from GitHub', (done) => {
+  it('should return the latest binary URL from GitHub', (done) => {
     chai.request(server)
     .get('/update/ESP32-SOCKETIO')
     .set('x-ESP32-version', 'v0.1')
     .end((err, res) => {
       res.should.have.status(200);
-      res.should.have.header('transfer-encoding', 'chunked');
+      console.log(res.body);
+      res.body.downloadUrl.should.contain("/interactionresearchstudio/");
       done();
     });
   });

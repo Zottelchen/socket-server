@@ -66,26 +66,9 @@ async function sendBinary(req, res) {
     console.log("INFO: No update needed.");
     res.sendStatus(304);
   } else if (versionCompare(espVersion, latestVersion) < 0) {
-    console.log("INFO: Update required");
-
     let downloadUrl = res.locals.asset.browser_download_url;
-
-    axios({
-      method: 'get',
-      url: downloadUrl,
-      responseType: 'stream'
-    })
-    .then((response) => {
-      if (response.data) {
-        console.log("INFO: Piping file to device...");
-        response.data.pipe(res);
-      }
-    })
-    .catch((error) => {
-      console.log("ERROR: Could not get bin file from GitHub.");
-      console.log(error);
-      res.sendStatus(500);
-    });
+    console.log("INFO: Update required with url " + downloadUrl);
+    res.json({"downloadUrl": downloadUrl});
   } else {
     console.log("WARN: semver comparison returned null. One of them is invalid! Returning 500...");
     res.sendStatus(500);
