@@ -29,8 +29,8 @@ describe('socket.io server', () => {
   });
 
   afterEach((done) => {
-    clientA.disconnect();
-    clientB.disconnect();
+    clientA.close();
+    clientB.close();
     done();
   });
 
@@ -81,6 +81,24 @@ describe('socket.io server', () => {
     });
     setTimeout(() => {
       clientA.emit('msg', {macAddress: "TE:ST:TE:ST:TE", msg: "OK"});
+    }, 3000);
+  });
+
+  it('should cache message if client is disconnected and send when reconnected.', (done) => {
+    clientB.emit('mac', {macAddress: "FF:FF:FF:FF:FF"});
+
+    setTimeout(() => {
+      clientB.close();
+    }, 1000);
+
+    setTimeout(() => {
+      clientB.on('msg', (data) => {
+        data.msg.should.equal("CACHED");
+        done();
+      });
+      clientA.emit('msg', {macAddress: "FF:FF:FF:FF:FF", msg: "CACHED"});
+      clientB.open();
+      clientB.emit('mac', {macAddress: "FF:FF:FF:FF:FF"});
     }, 3000);
   });
 
