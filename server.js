@@ -14,6 +14,7 @@ mongoose.connect(
       console.log('ERROR: Error connecting to the database. ' + err);
     } else {
       console.log('INFO: Connected to Database!');
+      /*
       console.log('INFO: Wiping all socketUuids...');
       User.find({}, (_err, _res) => {
         _res.forEach(user => {
@@ -24,6 +25,7 @@ mongoose.connect(
         })
       });
       console.log('INFO: Wiped socketUuids');
+      */
     }
 });
 
