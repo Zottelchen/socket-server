@@ -73,6 +73,19 @@ describe('socket.io server', () => {
     });
   });
 
+  it('should get partner offline event when partner is disconnected', (done) => {
+    clientA.on('partner offline', () => {
+      done();
+    });
+    clientB.emit('mac', {macAddress: "HO:HO:HO:HO:HO"});
+    setTimeout(() => {
+      clientB.close();
+    }, 1000);
+    setTimeout(() => {
+      clientA.emit('msg', {macAddress: "HO:HO:HO:HO:HO"});
+    }, 3000);
+  });
+
   it('should send a message from client a to client b', (done) => {
     clientB.emit('mac', {macAddress: "TE:ST:TE:ST:TE"});
     clientB.on("msg", (data) => {

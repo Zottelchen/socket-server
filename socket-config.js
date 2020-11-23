@@ -81,7 +81,7 @@ module.exports = (io) => {
     });
 
     // When user sends a message, send it to the destination
-    socket.on('msg', (data) => {
+    socket.on('msg', (data, id) => {
       // Forward message to pair
       console.log(`INFO: Got message addressed to ${data.macAddress}`);
       User.findOne({macAddress: data.macAddress})
@@ -94,8 +94,8 @@ module.exports = (io) => {
             io.to(user.socketUuid).emit('msg', data);
             console.log("INFO: Delivered message to " + user.socketUuid);
           } else {
-            console.log(`INFO: User ${user.macAddress} is disconnected, message will not be sent.`);
-            // TODO cache message in database.
+            console.log(`INFO: User ${user.macAddress} is disconnected, message will be cached.`);
+            socket.emit('partner offline');
             cacheMessage(user, data);
           }
         } else {
