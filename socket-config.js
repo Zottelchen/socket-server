@@ -12,7 +12,7 @@ module.exports = (io) => {
           console.log("INFO: No messages belonging to user " + user.macAddress);
           return null;
         } else {
-          io.to(user.socketUuid).emit('msg', message.message);
+          io.to(user.socketUuid).emit('msg qos1', message.message);
           console.log("INFO: Cached message found and delivered for user " + user.macAddress);
         }
       }
@@ -94,12 +94,36 @@ module.exports = (io) => {
             io.to(user.socketUuid).emit('msg', data);
             console.log("INFO: Delivered message to " + user.socketUuid);
           } else {
+            console.log(`INFO: User ${user.macAddress} is disconnected.`);
+            socket.emit('partner offline');
+          }
+        } else {
+          console.log(`INFO: User ${data.macAddress} could not be found in the database.`);
+          socket.emit('unknown user');
+        }
+      });
+    });
+
+    socket.on('msg qos1', (data, id) => {
+      // Forward message to pair
+      console.log(`INFO: Got message addressed to ${data.macAddress}`);
+      User.findOne({macAddress: data.macAddress})
+      .exec((err, user) => {
+        if (err) {
+          console.log("ERROR: Could not search.");
+        } else if (user) {
+          if (user.socketUuid !== null) {
+            // Send message
+            io.to(user.socketUuid).emit('msg qos1', data);
+            console.log("INFO: Delivered message to " + user.socketUuid);
+          } else {
             console.log(`INFO: User ${user.macAddress} is disconnected, message will be cached.`);
             socket.emit('partner offline');
             cacheMessage(user, data);
           }
         } else {
           console.log(`INFO: User ${data.macAddress} could not be found in the database.`);
+          socket.emit('unknown user');
         }
       });
     });

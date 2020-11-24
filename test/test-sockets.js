@@ -73,6 +73,17 @@ describe('socket.io server', () => {
     });
   });
 
+  it('should send a message from client a to client b', (done) => {
+    clientB.emit('mac', {macAddress: "TE:ST:TE:ST:TE"});
+    clientB.on("msg", (data) => {
+      data.msg.should.equal("OK");
+      done();
+    });
+    setTimeout(() => {
+      clientA.emit('msg', {macAddress: "TE:ST:TE:ST:TE", msg: "OK"});
+    }, 3000);
+  });
+
   it('should get partner offline event when partner is disconnected', (done) => {
     clientA.on('partner offline', () => {
       done();
@@ -86,15 +97,35 @@ describe('socket.io server', () => {
     }, 3000);
   });
 
-  it('should send a message from client a to client b', (done) => {
-    clientB.emit('mac', {macAddress: "TE:ST:TE:ST:TE"});
-    clientB.on("msg", (data) => {
-      data.msg.should.equal("OK");
+  it('should get partner offline event when partner is disconnected on qos1 message', (done) => {
+    clientA.on('partner offline', () => {
+      done();
+    });
+    clientB.emit('mac', {macAddress: "HO:HO:HO:HO:HO"});
+    setTimeout(() => {
+      clientB.close();
+    }, 1000);
+    setTimeout(() => {
+      clientA.emit('msg qos1', {macAddress: "HO:HO:HO:HO:HO"});
+    }, 3000);
+  });
+
+  it('should get unknown user event when user does not exist on qos1 message', (done) => {
+    clientA.on('unknown user', () => {
       done();
     });
     setTimeout(() => {
-      clientA.emit('msg', {macAddress: "TE:ST:TE:ST:TE", msg: "OK"});
-    }, 3000);
+      clientA.emit('msg qos1', {macAddress: "00:00:00:00:00"});
+    }, 1000);
+  });
+
+  it('should get unknown user event when user does not exist', (done) => {
+    clientA.on('unknown user', () => {
+      done();
+    });
+    setTimeout(() => {
+      clientA.emit('msg', {macAddress: "00:00:00:00:00"});
+    }, 1000);
   });
 
   it('should cache message if client is disconnected and send when reconnected.', (done) => {
@@ -105,11 +136,11 @@ describe('socket.io server', () => {
     }, 1000);
 
     setTimeout(() => {
-      clientB.on('msg', (data) => {
+      clientB.on('msg qos1', (data) => {
         data.msg.should.equal("CACHED");
         done();
       });
-      clientA.emit('msg', {macAddress: "FF:FF:FF:FF:FF", msg: "CACHED"});
+      clientA.emit('msg qos1', {macAddress: "FF:FF:FF:FF:FF", msg: "CACHED"});
       clientB.open();
       clientB.emit('mac', {macAddress: "FF:FF:FF:FF:FF"});
     }, 3000);
