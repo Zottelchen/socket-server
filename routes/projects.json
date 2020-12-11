@@ -9,6 +9,11 @@
       "name": "Speed Dial",
       "slug": "YoYo-2",
       "releaseUrl": "https://api.github.com/repos/interactionresearchstudio/YoYo-2/releases"
+    },
+    {
+      "name": "Knock Knock",
+      "slug": "YoYo-knock",
+      "releaseUrl": "https://api.github.com/repos/interactionresearchstudio/YoYo-knock/releases"
     }
   ]
 }
