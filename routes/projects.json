@@ -14,6 +14,11 @@
       "name": "Knock Knock",
       "slug": "YoYo-knock",
       "releaseUrl": "https://api.github.com/repos/interactionresearchstudio/YoYo-knock/releases"
+    },
+    {
+      "name": "Flutter By",
+      "slug": "YOYO-PIR",
+      "releaseUrl": "https://api.github.com/repos/interactionresearchstudio/YOYO-PIR/releases"
     }
   ]
 }
