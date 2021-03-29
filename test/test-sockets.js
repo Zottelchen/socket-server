@@ -146,4 +146,18 @@ describe('socket.io server', () => {
     }, 3000);
   });
 
+  it('should send stats when requested with get stats', (done) => {
+    clientA.emit('mac', {macAddress: "TE:ST:TE:ST:TE"});
+    clientB.emit('mac', {macAddress: "TE:ST:TE:ST:TE"});
+    clientA.on('stats', (data) => {
+      console.log(data);
+      data.users.should.equal(3);
+      data.usersOnline.should.equal(2);
+      done();
+    });
+    setTimeout(() => {
+      clientA.emit('get stats');
+    }, 2000);
+  });
+
 });

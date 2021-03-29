@@ -128,6 +128,31 @@ module.exports = (io) => {
       });
     });
 
+    socket.on('get stats', (data, id) => {
+      console.log('INFO: user stats requested');
+      let stats = {
+        users: 0,
+        usersOnline: 0
+      }
+      User.countDocuments({socketUuid: null})
+      .exec((err, usersOnline) => {
+        if (err) {
+          console.log("ERROR: Could not count.");
+        } else {
+          stats.usersOnline = usersOnline;
+        }
+        User.countDocuments({})
+        .exec((err, users) => {
+          if (err) {
+            console.log("ERROR: Could not count.");
+          } else {
+            stats.users = users;
+            socket.emit('stats', stats);
+          }
+        });
+      });
+    });
+
     socket.on('disconnect', (reason) => {
       console.log(`INFO: Client with id ${socket.id} disconnected.`);
       User.findOne({socketUuid: socket.id})
