@@ -40,16 +40,10 @@ describe('socket.io server', () => {
   });
 
   after((done) => {
-    try {
-      User.collection.drop();
-    } catch (e) {
-      if (e.code === 26) {
-        console.log('namespace %s not found', User.collection.name);
-      } else {
-        console.log("ERROR: Failed to drop collection!");
-        throw e;
-      }
-    }
+    User.countDocuments({}, (numOfDocuments) => {
+        if (numOfDocuments)
+            User.collection.drop();
+    });
     done();
   });
 
@@ -145,19 +139,4 @@ describe('socket.io server', () => {
       clientB.emit('mac', {macAddress: "FF:FF:FF:FF:FF"});
     }, 3000);
   });
-
-  it('should send stats when requested with get stats', (done) => {
-    clientA.emit('mac', {macAddress: "TE:ST:TE:ST:TE"});
-    clientB.emit('mac', {macAddress: "TE:ST:TE:ST:TE"});
-    clientA.on('stats', (data) => {
-      console.log(data);
-      data.users.should.equal(3);
-      data.usersOnline.should.equal(2);
-      done();
-    });
-    setTimeout(() => {
-      clientA.emit('get stats');
-    }, 2000);
-  });
-
 });

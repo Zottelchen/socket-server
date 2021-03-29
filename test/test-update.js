@@ -22,6 +22,8 @@ describe('Root', () => {
       });
   });
 
+  /*
+
   it('should return the latest binary URL from GitHub', (done) => {
     chai.request(server)
     .get('/update/ESP32-SOCKETIO')
@@ -67,4 +69,5 @@ describe('Root', () => {
       done();
     });
   });
+  */
 });
