@@ -6,6 +6,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node app.js",
+    "localstart": "set MONGODB_URI=mongodb://127.0.0.1:27017/node-testing&& node app.js",
     "test": "mocha --timeout 15000 --exit"
   },
   "author": "Mike Vanis",
