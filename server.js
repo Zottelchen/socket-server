@@ -30,14 +30,16 @@ mongoose.connect(
     }
 });
 
-// Setup logging
-app.use(morgan('combined'))
-console.info('Morgan logging enabled.')
+
 
 
 // Create HTTP server
 const app = express();
 const server = http.createServer(app);
+
+// Setup logging
+app.use(morgan('combined'))
+console.info('Morgan logging enabled.')
 
 // HTTP root
 app.get('/', function (req, res) {
