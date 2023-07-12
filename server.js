@@ -1,6 +1,7 @@
 const express = require('express');
 const http = require('http');
 const mongoose = require('mongoose');
+const morgan = require('morgan');
 const User = require('./models/user');
 // Setup port
 const port = process.env.PORT || 5000;
@@ -11,9 +12,9 @@ mongoose.connect(
   { useNewUrlParser: true,  useUnifiedTopology: true },
   (err, res) => {
     if(err) {
-      console.log('ERROR: Error connecting to the database. ' + err);
+      console.error('ERROR: Error connecting to the database. ' + err);
     } else {
-      console.log('INFO: Connected to Database!');
+      console.info('INFO: Connected to Database!');
       /*
       console.log('INFO: Wiping all socketUuids...');
       User.find({}, (_err, _res) => {
@@ -29,13 +30,18 @@ mongoose.connect(
     }
 });
 
+// Setup logging
+app.use(morgan('combined'))
+console.info('Morgan logging enabled.')
+
+
 // Create HTTP server
 const app = express();
 const server = http.createServer(app);
 
 // HTTP root
 app.get('/', function (req, res) {
-  console.log('INFO: Requested root.');
+  console.info('INFO: Requested root.');
   res.send('Hello World');
 });
 
@@ -51,6 +57,7 @@ const socketConfig = require('./socket-config');
 let io = require('socket.io')(server);
 socketConfig(io);
 
+// Error handling
 app.use((err, req, res, next) => {
   console.error(err.stack)
   res.status(500).send('Something broke!')
@@ -59,7 +66,7 @@ app.use((err, req, res, next) => {
 // Start server
 server.start = () => {
   server.listen(port, () => {
-    console.log(`INFO: Server started on port ${port}.`);
+    console.info(`INFO: Server started on port ${port}.`);
   });
 };
 
