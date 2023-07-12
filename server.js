@@ -45,10 +45,16 @@ app.use('/', update);
 const stats = require('./routes/stats');
 app.use('/stats', stats);
 
+
 // socket.io server
 const socketConfig = require('./socket-config');
 let io = require('socket.io')(server);
 socketConfig(io);
+
+app.use((err, req, res, next) => {
+  console.error(err.stack)
+  res.status(500).send('Something broke!')
+})
 
 // Start server
 server.start = () => {
