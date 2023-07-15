@@ -5,7 +5,7 @@
   "repository": "https://github.com/interactionresearchstudio/socket-server",
   "main": "server.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "npx tailwindcss -i ./src/input.css -o ./public/css/tailwind.css && node app.js",
     "localstart": "set MONGODB_URI=mongodb://127.0.0.1:27017/node-testing&& node app.js",
     "test": "mocha --timeout 15000 --exit"
   },
@@ -14,7 +14,9 @@
   "dependencies": {
     "axios": "^1.4.0",
     "body-parser": "^1.19.0",
+    "ejs": "^3.1.9",
     "express": "^4.17.1",
+    "flowbite": "^1.7.0",
     "mongoose": "^5.9.25",
     "morgan": "^1.10.0",
     "request": "^2.88.2",
@@ -22,10 +24,13 @@
     "uuidv4": "^6.2.0"
   },
   "devDependencies": {
+    "autoprefixer": "^10.4.14",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "jasmine": "^3.6.1",
     "mocha": "^10.2.0",
-    "socket.io-client": "^2.3.0"
+    "postcss": "^8.4.26",
+    "socket.io-client": "^2.3.0",
+    "tailwindcss": "^3.3.3"
   }
 }
