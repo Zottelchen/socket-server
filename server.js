@@ -1,5 +1,6 @@
 const express = require("express");
 const http = require("http");
+const path = require("path");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
 const User = require("./models/user");
@@ -39,10 +40,13 @@ const server = http.createServer(app);
 app.use(morgan("combined"));
 console.info("Morgan logging enabled.");
 
+// Setup static files
+app.use(express.static(path.join(__dirname, "public")));
+
 // HTTP root
 app.get("/", function (req, res) {
   console.info("INFO: Requested root.");
-  res.send("Hello World");
+  res.sendFile(path.join(__dirname, "/public/home.html"));
 });
 
 const update = require("./routes/update");
@@ -59,7 +63,7 @@ socketConfig(io);
 // Error handling
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send("Something broke!");
+  res.status(500).send("Something broke! :(");
 });
 
 // Start server
