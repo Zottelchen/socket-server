@@ -4,8 +4,7 @@ const path = require("path");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
 const User = require("./models/user");
-// Setup port
-const port = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000;
 
 // Connect to DB
 mongoose.connect(
@@ -36,17 +35,24 @@ mongoose.connect(
 const app = express();
 const server = http.createServer(app);
 
+// Setup View engine
+app.set("view engine", "ejs");
+
 // Setup logging
 app.use(morgan("combined"));
 console.info("Morgan logging enabled.");
 
 // Setup static files
 app.use(express.static(path.join(__dirname, "public")));
+app.use(
+  "/js/flowbite",
+  express.static(path.join(__dirname, "node_modules", "flowbite", "dist"))
+);
 
 // HTTP root
 app.get("/", function (req, res) {
   console.info("INFO: Requested root.");
-  res.sendFile(path.join(__dirname, "/public/home.html"));
+  res.render("index");
 });
 
 const update = require("./routes/update");
@@ -73,8 +79,8 @@ app.use((err, req, res, next) => {
 
 // Start server
 server.start = () => {
-  server.listen(port, () => {
-    console.info(`INFO: Server started on port ${port}.`);
+  server.listen(PORT, () => {
+    console.info(`INFO: Server started on port ${PORT}.`);
   });
 };
 
