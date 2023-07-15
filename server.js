@@ -61,9 +61,14 @@ let io = require("socket.io")(server);
 socketConfig(io);
 
 // Error handling
+/// Handle 404
+app.use((req, res) => {
+  res.status(404).sendFile(path.join(__dirname, "/public/404.html"));
+});
+/// Handle 500
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send("Something broke! :(");
+  res.status(500).sendFile(path.join(__dirname, "/public/500.html"));
 });
 
 // Start server
