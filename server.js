@@ -63,14 +63,32 @@ let io = require("socket.io")(server);
 socketConfig(io);
 
 // Error handling
-/// Handle 404
-app.use((req, res) => {
-  res.status(404).sendFile(path.join(__dirname, "/public/404.html"));
-});
 /// Handle 500
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).sendFile(path.join(__dirname, "/public/500.html"));
+  res.status(500).render("error", {
+    pageTitle: "Error 500 - Server goofed.",
+    errorMessage: "Something broke :(",
+    statusCode: "500",
+    textColor: "#FFD800",
+  });
+});
+app.get("/500", function (req, res) {
+  res.status(500).render("error", {
+    pageTitle: "Error 500 - Server goofed.",
+    errorMessage: "Something broke :(",
+    statusCode: "500",
+    textColor: "#FFD800",
+  });
+});
+/// Handle 404
+app.use((req, res) => {
+  res.status(404).render("error", {
+    pageTitle: "Error 404 - Page Not Found",
+    errorMessage: "Page not found. :/",
+    statusCode: "404",
+    textColor: "#FF6A3D",
+  });
 });
 
 // Start server
