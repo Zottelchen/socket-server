@@ -45,10 +45,6 @@ console.info("Morgan logging enabled.");
 
 // Setup static files
 app.use(express.static(path.join(__dirname, "public")));
-app.use(
-  "/js/flowbite",
-  express.static(path.join(__dirname, "node_modules", "flowbite", "dist"))
-);
 
 // HTTP root
 app.get("/", function (req, res) {
