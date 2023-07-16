@@ -37,6 +37,7 @@ const server = http.createServer(app);
 
 // Setup View engine
 app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
 
 // Setup logging
 app.use(morgan("combined"));
@@ -51,7 +52,6 @@ app.use(
 
 // HTTP root
 app.get("/", function (req, res) {
-  console.info("INFO: Requested root.");
   res.render("index");
 });
 
