@@ -5,7 +5,8 @@
   "repository": "https://github.com/interactionresearchstudio/socket-server",
   "main": "server.js",
   "scripts": {
-    "start": "npx tailwindcss -i ./src/input.css -o ./public/css/tailwind.css && node app.js",
+    "start": "npm build:css && node app.js",
+    "build:css": " npx tailwindcss -i ./public/css/tailwind.css -o ./public/css/style.css",
     "localstart": "set MONGODB_URI=mongodb://127.0.0.1:27017/node-testing&& node app.js",
     "test": "mocha --timeout 15000 --exit"
   },
