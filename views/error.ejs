@@ -1,24 +1,28 @@
 <%- include ('./partials/header' , {title: pageTitle }) %>
 
-    <script>plausible("<%= statusCode %>", { props: { path: document.location.pathname } });</script>
-    <main class="h-screen w-full flex flex-col justify-center items-center bg-[#1A2238]">
-        <h1 class="text-9xl font-extrabold text-white tracking-widest">
-            <%= statusCode %>
-        </h1>
-        <div class="bg-[<%= textColor %>] px-2 text-sm rounded rotate-12 absolute">
-            <%= errorMessage %>
-        </div>
-        <button class="mt-5">
-            <a class="relative inline-block text-sm font-medium text-[<%= textColor %>] group active:text-orange-500 focus:outline-none focus:ring"
-                href="/">
-                <span
-                    class="absolute inset-0 transition-transform translate-x-0.5 translate-y-0.5 bg-[<%= textColor %>] group-hover:translate-y-0 group-hover:translate-x-0"></span>
+<script>
+  plausible("<%= statusCode %>", {
+    props: {
+      path: document.location.pathname
+    }
+  });
+</script>
+<main class="h-screen w-full flex flex-col justify-center items-center bg-[#1A2238]">
+  <h1 class="text-9xl font-extrabold text-white tracking-widest">
+    <%= statusCode %>
+  </h1>
+  <div class="bg-[<%= textColor %>] px-2 text-sm rounded rotate-12 absolute">
+    <%= errorMessage %>
+  </div>
+  <button class="mt-5">
+    <a class="relative inline-block text-sm font-medium text-[<%= textColor %>] group active:text-orange-500 focus:outline-none focus:ring" href="/">
+      <span class="absolute inset-0 transition-transform translate-x-0.5 translate-y-0.5 bg-[<%= textColor %>] group-hover:translate-y-0 group-hover:translate-x-0"></span>
 
-                <span class="relative block px-8 py-3 bg-[#1A2238] border border-current">
-                    Go Home
-                </span>
-            </a>
-        </button>
-    </main>
+      <span class="relative block px-8 py-3 bg-[#1A2238] border border-current">
+        Go Home
+      </span>
+    </a>
+  </button>
+</main>
 
-    <%- include ('./partials/footer') %>
+<%- include ('./partials/footer') %>
