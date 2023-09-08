@@ -5,7 +5,8 @@ module.exports = (io) => {
 	const sendCachedMessage = (user) => {
 		Message.findOne({ user: user._id }).exec((err, message) => {
 			if (err) {
-				console.log("ERROR: Could not search for message.");
+				console.log("ERROR-1: Could not search for message.");
+				console.log(err);
 			} else {
 				if (!message) {
 					console.log(`INFO: No messages belonging to user ${user.macAddress}`);
@@ -27,7 +28,7 @@ module.exports = (io) => {
 		});
 		newMessage.save((err, data) => {
 			if (err) {
-				console.log("ERROR: Could not save message.");
+				console.log("ERROR-2: Could not save message.");
 				console.log(err);
 			} else {
 				console.log(`INFO: Saved message for ${user.macAddress}`);
@@ -54,7 +55,8 @@ module.exports = (io) => {
 			// Search for user, update their socketUuid.
 			User.findOne({ macAddress: data.macAddress }).exec((err, user) => {
 				if (err) {
-					console.log("ERROR: Could not search for user.");
+					console.log("ERROR-3: Could not search for user.");
+					console.log(err)
 				} else {
 					if (!user) {
 						console.log(
@@ -66,7 +68,8 @@ module.exports = (io) => {
 						});
 						newUser.save((_err, _data) => {
 							if (_err) {
-								console.log("ERROR: Could not save user.");
+								console.log("ERROR-4: Could not save user.");
+								console.log(_err);
 							} else {
 								console.log(
 									`INFO: Created new user with mac address ${_data.macAddress}`,
@@ -90,7 +93,8 @@ module.exports = (io) => {
 			console.log(`INFO: Got message addressed to ${data.macAddress}`);
 			User.findOne({ macAddress: data.macAddress }).exec((err, user) => {
 				if (err) {
-					console.log("ERROR: Could not search.");
+					console.log("ERROR-5: Could not search.");
+					console.log(err)
 				} else if (user) {
 					if (user.socketUuid !== null) {
 						// Send message
@@ -114,7 +118,8 @@ module.exports = (io) => {
 			console.log(`INFO: Got message addressed to ${data.macAddress}`);
 			User.findOne({ macAddress: data.macAddress }).exec((err, user) => {
 				if (err) {
-					console.log("ERROR: Could not search.");
+					console.log("ERROR-6: Could not search.");
+					console.log(err);
 				} else if (user) {
 					if (user.socketUuid !== null) {
 						// Send message
@@ -144,13 +149,15 @@ module.exports = (io) => {
 			};
 			User.countDocuments({ socketUuid: null }).exec((err, usersOnline) => {
 				if (err) {
-					console.log("ERROR: Could not count.");
+					console.log("ERROR-7: Could not count.");
+					console.log(err);
 				} else {
 					stats.usersOnline = usersOnline;
 				}
 				User.countDocuments({}).exec((err, users) => {
 					if (err) {
-						console.log("ERROR: Could not count.");
+						console.log("ERROR-8: Could not count.");
+						console.log(err);
 					} else {
 						stats.users = users;
 						socket.emit("stats", stats);
@@ -163,7 +170,8 @@ module.exports = (io) => {
 			console.log(`INFO: Client with id ${socket.id} disconnected.`);
 			User.findOne({ socketUuid: socket.id }).exec((err, user) => {
 				if (err) {
-					console.log("ERROR: Could not search.");
+					console.log("ERROR-9: Could not search.");
+					console.log(err);
 				} else if (user) {
 					user.socketUuid = null;
 					user.save((_err, data) => {
