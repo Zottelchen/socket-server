@@ -1,4 +1,23 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./public/**/*.{html,js,css}", "./views/**/*.ejs"],
+	content: ["./public/**/*.{html,js,css}", "./views/**/*.ejs"],
+	theme: {
+		extend: {
+			colors: {
+				"water-leaf": {
+					50: "#f1fcf8",
+					100: "#d1f6eb",
+					200: "#9cebd6",
+					300: "#6ddbc2",
+					400: "#3ec3a8",
+					500: "#25a790",
+					600: "#1b8674",
+					700: "#1a6b5f",
+					800: "#19564e",
+					900: "#194842",
+					950: "#082b27",
+				},
+			},
+		},
+	},
 };
