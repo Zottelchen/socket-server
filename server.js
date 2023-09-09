@@ -54,6 +54,10 @@ app.get("/", function (req, res) {
 	res.render("index");
 });
 
+app.get("/test", function (req, res) {
+	res.render("test");
+});
+
 const update = require("./routes/update");
 app.use("/", update);
 
