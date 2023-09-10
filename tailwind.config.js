@@ -18,6 +18,10 @@ module.exports = {
 					950: "#082b27",
 				},
 			},
+			fontFamily: {
+				comfortaa: ["Comfortaa", "sans-serif"],
+				economica: ["Economica", "sans-serif"],
+			},
 		},
 	},
 };
