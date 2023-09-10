@@ -6,7 +6,7 @@
   "main": "server.js",
   "scripts": {
     "start": "npm run build:css && node app.js",
-    "build:css": "npx tailwindcss -i ./public/css/tailwind.css -o ./public/css/style.css",
+    "build:css": "npx tailwindcss -i ./public/css/tailwind.css -o ./public/css/style.css --minify",
     "watch:css": "npx tailwindcss -i ./public/css/tailwind.css -o ./public/css/style.css --watch",
     "localstart": "set MONGODB_URI=mongodb://127.0.0.1:27017/node-testing&& node app.js",
     "test": "mocha --timeout 15000 --exit"
