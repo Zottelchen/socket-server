@@ -2,23 +2,29 @@
 <html>
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="/css/style.css" rel="stylesheet" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="/css/style.css" rel="stylesheet" />
 
-    <!--TODO: remove before publishing-->
-    <script defer data-domain="nodeserver.ba.uncertitu.de" src="https://p.uncertitu.de/js/script.js"></script>
-    <script>window.plausible = window.plausible || function () { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>
+  <%# TODO: remove before publishing %>
+  <script defer data-domain="nodeserver.ba.uncertitu.de" src="https://p.uncertitu.de/js/script.js"></script>
+  <script>
+    window.plausible = window.plausible || function() {
+      (window.plausible.q = window.plausible.q || []).push(arguments)
+    }
+  </script>
 
-    <link rel="icon" type="image/apng" sizes="47x47" href="/favicon.apng">
-    <link rel="icon" type="image/gif" sizes="47x47" href="/favicon.gif">
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
-    <title>
-        <%= title %>
-    </title>
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#25a790">
+  <meta name="msapplication-TileColor" content="#25a790">
+  <meta name="theme-color" content="#d1f6eb">
+
+  <title>
+    <%= title %>
+  </title>
 </head>
 
 <body>
