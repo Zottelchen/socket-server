@@ -53,6 +53,27 @@ app.use(express.static(path.join(__dirname, "public")));
 app.get("/", function (req, res) {
 	res.render("index");
 });
+app.get("/home", function (req, res) {
+	res.render("index");
+});
+app.get("/build", function (req, res) {
+	res.render("build");
+});
+app.get("/faq", function (req, res) {
+	res.render("faq");
+});
+app.get("/device", function (req, res) {
+	res.render("device");
+});
+app.get("/stats", function (req, res) {
+	res.render("stats");
+});
+app.get("/privacy", function (req, res) {
+	res.render("privacy");
+});
+app.get("/about", function (req, res) {
+	res.render("about");
+});
 
 app.get("/test", function (req, res) {
 	res.render("test");
