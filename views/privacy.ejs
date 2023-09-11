@@ -1,17 +1,22 @@
-<%- include ('./partials/header' , {title: "☝Privacy Policy" }) %>
+<%- include('./partials/page_start', {title: "☝️Privacy Policy", page_title: "Welcome!"}) %>
 
-<div class="grid grid-cols-5 gap-4">
-  <div class="col-span-1">
-    <%- include ('./partials/menu') %>
-  </div>
-  <div class="col-span-4">
-    <div class="flex items-center justify-center h-screen flex-col gap-5">
-      <h1 class="text-5xl font-bold underline text-green-500">Privacy world!</h1>
-      <h3 class="text-blue-900 text-3xl font-bold">
-        It does work! Even with EJS! ;-)
-      </h3>
-    </div>
-  </div>
-</div>
+<p>The following data is transmitted encrypted/unencrypted <%# TODO %> when you use Yo-Yo Machines:</p>
 
-<%- include ('./partials/footer') %>
+<ul class="list-disc list-inside">
+  <li>your IP</li>
+  <li>the MAC address of the Yo-Yo Machine you are sending from and the one of the one you are trying to reach</li>
+</ul>
+
+<p>The following data is transmitted when you use this website:</p>
+
+<ul class="list-disc list-inside">
+  <li>TBD<%# TODO %></li>
+</ul>
+
+<p>The data is saved for ???<%# TODO %> in the following location:</p>
+<ul class="list-disc list-inside">
+  <li>Falkenstein, Germany</li>
+</ul>
+
+
+<%- include('./partials/page_end') %>
