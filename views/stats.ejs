@@ -1,17 +1,44 @@
-<%- include ('./partials/header' , {title: "📈Stats" }) %>
+<%- include('./partials/page_start', {title: "📈Stats", page_title: "Statistics & Numbers"}) %>
 
-<div class="grid grid-cols-5 gap-4">
-  <div class="col-span-1">
-    <%- include ('./partials/menu') %>
-  </div>
-  <div class="col-span-4">
-    <div class="flex items-center justify-center h-screen flex-col gap-5">
-      <h1 class="text-5xl font-bold underline text-green-500">Stat world!</h1>
-      <h3 class="text-blue-900 text-3xl font-bold">
-        It does work! Even with EJS! ;-)
-      </h3>
+<div class="px-4 py-16 mx-auto">
+  <div class="grid grid-cols-3 gap-4">
+    <div class="text-center border-r">
+      <h6 class="text-5xl font-bold">42</h6>
+      <p class="font-medium tracking-widest uppercase text-base">
+        Currently online
+      </p>
+    </div>
+    <div class="text-center border-r">
+      <h6 class="text-5xl font-bold">42</h6>
+      <p class="font-medium tracking-widest uppercase text-base">
+        YYM seen
+      </p>
+    </div>
+    <div class="text-center border-r">
+      <h6 class="text-5xl font-bold">42</h6>
+      <p class="font-medium tracking-widest uppercase text-base">
+        Downloads
+      </p>
+    </div>
+    <div class="text-center border-r">
+      <h6 class="text-5xl font-bold">42</h6>
+      <p class="font-medium tracking-widest uppercase text-base">
+        Signals sent
+      </p>
+    </div>
+    <div class="text-center border-r">
+      <h6 class="text-5xl font-bold">42</h6>
+      <p class="font-medium tracking-widest uppercase text-base">
+        Links shared
+      </p>
+    </div>
+    <div class="text-center">
+      <h6 class="text-5xl font-bold">42</h6>
+      <p class="font-medium tracking-widest uppercase text-base">
+        Devices exploded
+      </p>
     </div>
   </div>
 </div>
 
-<%- include ('./partials/footer') %>
+<%- include('./partials/page_end') %>
