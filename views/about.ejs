@@ -1,17 +1,5 @@
-<%- include ('./partials/header' , {title: "⏩About" }) %>
+<%- include('./partials/page_start', {title: "⏩About", page_title: "About this page"}) %>
 
-<div class="grid grid-cols-5 gap-4">
-  <div class="col-span-1">
-    <%- include ('./partials/menu') %>
-  </div>
-  <div class="col-span-4">
-    <div class="flex items-center justify-center h-screen flex-col gap-5">
-      <h1 class="text-5xl font-bold underline text-green-500">About world!</h1>
-      <h3 class="text-blue-900 text-3xl font-bold">
-        It does work! Even with EJS! ;-)
-      </h3>
-    </div>
-  </div>
-</div>
+<p>Wouldn't it be cool, if this page was already finished?</p>
 
-<%- include ('./partials/footer') %>
+<%- include('./partials/page_end') %>
