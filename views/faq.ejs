@@ -56,11 +56,11 @@
 <%# generate q&a %>
 <% for (let [category, questions] of Object.entries(qa)) { %>
 <h2 id="<%= category %>" class="text-2xl font-bold my-8"><%= category %></h2>
-<ul class="space-y-3">
+<ul class="space-y-3 ml-2">
   <% for (let [question, answer] of Object.entries(questions)) { %>
   <li>
     <h3 id="<%= question %>" class="text-xl font-bold my-3"><%= question %></h3>
-    <p class="ml-1 "><%= answer %></p>
+    <p class="ml-2"><%= answer %></p>
   </li>
   <% } %>
 </ul>
