@@ -1,17 +1,20 @@
-<%- include ('./partials/header' , {title: "🏠Home" }) %>
+<%- include('./partials/page_start', {title: "🏠Home", page_title: "Welcome!"}) %>
 
-<div class="grid grid-cols-5 gap-4">
-  <div class="col-span-1">
-    <%- include ('./partials/menu') %>
-  </div>
-  <div class="col-span-4">
-    <div class="flex items-center justify-center h-screen flex-col gap-5">
-      <h1 class="text-5xl font-bold underline text-green-500">Home world!</h1>
-      <h3 class="text-blue-900 text-3xl font-bold">
-        It does work! Even with EJS! ;-)
-      </h3>
-    </div>
-  </div>
-</div>
+<p>Have you heard about Yo-Yo Machines? They're super cool communication devices that you can actually make yourself. The best part is, they let you send all kinds of fun signals like lights, sounds, or even simple mechanical movements. It's like a whole new way to chat without actually talking!</p>
 
-<%- include ('./partials/footer') %>
+<p>If you want more information on this awesome invention, check out yoyomachines.io. And guess what?</p>
+
+<p>This page right here is an extension of that amazingness. It's got some really useful stuff to help you out:</p>
+
+<ul class="m-5">
+  <li>① We've got a guide to building your very own Yo-Yo Machine. Trust us, it's not as hard as it sounds!</li>
+  <li>② There's also a handy FAQ section where you can find answers to all your burning questions.</li>
+  <li>③ Oh, and you can even test your device here. Yea, that's right! You can send some funky lights to your machine and enjoy other fun things.</li>
+  <li>④ Curious about how many other Yo-Yo Machines are connected to our server? We've got you covered!</li>
+  <li>⑤ Wanna dig into the nitty-gritty details? You can find out what data we process and where it goes.</li>
+  <li>⑥ And lastly, if you want to know more about this little project, we've got some juicy info for you.</li>
+</ul>
+
+<p>So go ahead and explore. Get ready to have a blast with your very own Yo-Yo Machine!</p>
+
+<%- include('./partials/page_end') %>
