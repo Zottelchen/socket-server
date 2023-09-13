@@ -1,7 +1,71 @@
-<%- include('./partials/page_start', {title: "🚀Build", page_title: "How to Build a Yo-Yo Machine"}) %>
+<!DOCTYPE html>
+<html>
 
-<div class="flex items-center justify-center place-content-center h-full">
-  <iframe src="/build_guide.html" class="grow h-full"></iframe>
-</div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="/css/style.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/reveal.css">
+  <link rel="stylesheet" href="css/theme/white.css">
 
-<%- include('./partials/page_end') %>
+  <%# TODO: remove before publishing %>
+  <script defer data-domain="nodeserver.ba.uncertitu.de" src="https://p.uncertitu.de/js/script.js"></script>
+  <script>
+    window.plausible = window.plausible || function() {
+      (window.plausible.q = window.plausible.q || []).push(arguments)
+    }
+  </script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#25a790">
+  <meta name="msapplication-TileColor" content="#25a790">
+  <meta name="theme-color" content="#d1f6eb">
+
+  <title>
+    🚀Build | yoyo!
+  </title>
+</head>
+
+<body>
+
+  <div class="grid grid-cols-5 gap-4">
+    <div class="col-span-1">
+      <%- include ('./partials/menu') %>
+    </div>
+    <div class="col-span-4 font-comfortaa h-screen">
+      <div class="mt-6 mr-20 h-3/5">
+        <h1 id="title" class="text-5xl font-bold my-8">How to Build a Yo-Yo Machine</h1>
+        <div id="content" class="space-y-4 h-full">
+
+          <%# CONTENT START #%>
+
+          <div class="flex items-center justify-center place-content-center h-full">
+            <div class="reveal grow h-full">
+              <div class="slides">
+                <section>Slide 1</section>
+                <section>Slide 2</section>
+              </div>
+            </div>
+          </div>
+
+          <script src="js/reveal.js"></script>
+          <script src="js/plugin/markdown/markdown.js"></script>
+          <script>
+            // More info about initialization & config:
+            // - https://revealjs.com/initialization/
+            // - https://revealjs.com/config/
+            Reveal.initialize({
+              hash: true,
+              embedded: true,
+              slideNumber: 'c/t',
+              // Learn about plugins: https://revealjs.com/plugins/
+              plugins: [RevealMarkdown]
+            });
+          </script>
+
+          <%# CONTENT END #%>
+          <%- include('./partials/page_end') %>
