@@ -37,7 +37,7 @@
       <%- include ('./partials/menu') %>
     </div>
     <div class="col-span-4 font-comfortaa h-screen">
-      <div class="mt-6 mr-20 h-3/5">
+      <div class="mt-6 mr-20 h-3/4">
         <h1 id="title" class="text-5xl font-bold my-8">How to Build a Yo-Yo Machine</h1>
         <div id="content" class="space-y-4 h-full">
 
@@ -46,8 +46,284 @@
           <div class="flex items-center justify-center place-content-center h-full">
             <div class="reveal grow h-full">
               <div class="slides">
-                <section>Slide 1</section>
-                <section>Slide 2</section>
+                <section data-markdown>
+                  <textarea data-template>
+                    ## Hardware Build Guide
+                    <img src="/img/buildguide/step_00.jpg" alt="Step 00" style="margin:auto">
+                    This is a presentation - you can click the arrows on the right or use your arrow keys :)
+                    ---
+                    ## Introduction
+                    This guide takes you through the steps to building your Light Touch devices. In this stage we will show you how to:
+
+                    - upload firmware to the ESPS32S board
+                    - set up a network between two Light Touch devices
+                    - assemble the hardware
+
+                    Do take your time to go through each the steps. If you have any problems or need support you can visit our [FAQs pages](/faq).
+                    Once you have finished the assembly you can move to Stage 2 and build your own enclosures.
+                    ---
+                    ## Required Tools
+                    A computer running OSX 10.13 or later or Windows 10 with a spare USB port and Internet connection.
+
+                    **Note:** The ESP32S board will only connect to 2.5GHz Wi-Fi networks and with names less than 32 characters in length.
+                    ---
+                    ## Required Parts (per device)
+                    You usually want to build two devices to use the Light Touch system. So double the parts below.
+                    - [Micro USB cable](https://make.yoyomachines.io/Item/Micro_USB_cable)
+                    - [USB power supply](https://make.yoyomachines.io/Item/USB_power_outlet_or_USB_battery_bank)
+                    - [ESP32S board](https://make.yoyomachines.io/Item/ESP32S_board)
+                    - [2x Addressable RGB Leds](https://make.yoyomachines.io/Item/Addressable_RGB_Leds)
+                    - [Breadboard](https://make.yoyomachines.io/Item/Breadboard)
+                    - [7x Male to Male Jumper Wires](https://make.yoyomachines.io/Item/Male_to_Male_Jumper_Wires)
+                  </textarea>
+                </section>
+                <section data-background-color="aquamarine">
+                  <h2>Section 1: Installing the Firmware</h2>
+                </section>
+                <section data-markdown>
+                  <textarea data-template>
+                    ## Download the USB driver
+                    Download the USB driver so the ESP32 board can communicate with your computer. The Windows version can be found here.
+                    <img data-src="/img/buildguide/step_01.jpg" alt="Step 01" style="margin:auto">
+                    ---
+                    ## Download the USB driver
+                    Unzip the download.
+                    <img data-src="/img/buildguide/step_02.jpg" alt="Step 02" style="margin:auto">
+                    ---
+                    ## Download the USB driver
+                    Open the installer CP210xVCPInstaller_x64.
+                    <img data-src="/img/buildguide/step_03.jpg" alt="Step 03" style="margin:auto">
+                    ---
+                    ## Install the USB driver
+                    Click **Next** to go through the installation wizard.
+                    <img data-src="/img/buildguide/step_04.jpg" alt="Step 04" style="margin:auto">
+                    ---
+                    ## Install the USB driver
+                    After installing successfully, the wizard should report that the driver is ready to use. Click **Finish** to exit the wizard.
+                    <img data-src="/img/buildguide/step_05.jpg" alt="Step 05" style="margin:auto">
+                    ---
+                    ## Download the Yo-Yo Firmware Uploader
+                    The Yo-Yo Firmware Uploader will enable you to upload the latest firmware to your ESP32S board. Download the latest release [here](https://github.com/interactionresearchstudio/esptool-python-gui/releases).
+                    <img data-src="/img/buildguide/step_06.jpg" alt="Step 06" style="margin:auto">
+                    ---
+                    ## Download the Yo-Yo Firmware Uploader
+                    Unzip the downloaded app and open the contents of the extracted folder. The app should be inside the extracted folder.
+                    <img data-src="/img/buildguide/step_07.jpg" alt="Step 07" style="margin:auto">
+                    ---
+                    ## Plug in your ESP32S board
+                    Plug your ESP32S board into your computer with the USB cable. You should see a red light on the board, which means it is powered up.
+                    <img data-src="/img/buildguide/step_08.jpg" alt="Step 08" style="margin:auto">
+                    ---
+                    ## Choose your Serial Port
+                    Open the Yo-Yo Firmware Uploader and select the device in the drop down menu. You may need to press “refresh list” if you do not see it in your list.
+                    <img data-src="/img/buildguide/step_09.jpg" alt="Step 09" style="margin:auto">
+                    ---
+                    ## Choose your Serial Port
+                    Your board's serial port should appear as something along the lines of COM# (COM3 in this case).
+                    <img data-src="/img/buildguide/step_09.jpg" alt="Step 09" style="margin:auto">
+                    ---
+                    ## Choose your Serial Port
+                    If the device doesn't appear, double check that your USB cable has a data line. Some USB cables only have power lines, as they are used for charging only.
+                    <img data-src="/img/buildguide/step_09.jpg" alt="Step 09" style="margin:auto">
+                    ---
+                    ## Choose your project
+                    Use the 'project' drop-down menu to select which device you are making.
+                    <img data-src="/img/buildguide/step_10.jpg" alt="Step 10" style="margin:auto">
+                    ---
+                    ## Upload the Firmware
+                    When you're ready, click on **Upload** to upload the latest firmware.
+                    <img data-src="/img/buildguide/step_12.jpg" alt="Step 12" style="margin:auto">
+                    ---
+                    ## Upload the Firmware
+                    When prompted, hold the BOOT button on your board to set it to "programming mode". You can let go of the button once you see the text "Writing" in the console text.
+                    <img data-src="/img/buildguide/step_11.jpg" alt="Step 11" style="margin:auto">
+                    ---
+                    ## Upload the Firmware
+                    When the uploader finishes transferring the firmware to the device, it will say "Success!" If you have another device to set up, you can repeat this process with the new ESP32S board.
+                    <img data-src="/img/buildguide/step_13.jpg" alt="Step 13" style="margin:auto">
+                  </textarea>
+                </section>
+                <section data-background-color="aquamarine">
+                  <h2>Section 2: Setting up the Connection</h2>
+                </section>
+                <section data-markdown>
+                  <textarea data-template>
+                    ## Choosing a setup method
+                    There are two main methods for setting up the network and pairing Yo–Yo Machines. In the first, both devices are set up in the same space, before one of them is sent to a remote location.
+                    <img data-src="/img/buildguide/step_14.jpg" alt="Step 14" style="margin:auto">
+                    ---
+                    ## Choosing a setup method
+                    In the second, devices are set up in separate spaces while coordinating with someone over the phone. Both methods are covered in the following guide, but setting up a pair in the same space is shown as the primary method.
+                    <img data-src="/img/buildguide/step_15.jpg" alt="Step 15" style="margin:auto">
+                    ---
+                    ## Connect to Yo–Yo network
+                    Power up the first ESP32S using a USB port or USB power supply and wait 10 seconds.
+                    <img data-src="/img/buildguide/step_16.jpg" alt="Step 16" style="margin:auto">
+                    ---
+                    ## Connect to Yo–Yo networ
+                    With your mobile device or computer, connect to the newly created Wi-Fi network named “Yo-Yo-####” with the password “blinkblink”. If you are viewing these instruction online on our website, use another device to connect to the new network so you can keep the instruction open.
+                    <img data-src="/img/buildguide/step_17.jpg" alt="Step 17" style="margin:auto">
+                    ---
+                    ## The captive portal
+                    A captive portal should open automatically. The captive portal will show the 5 Wi-Fi networks with the strongest signals.
+                    <img data-src="/img/buildguide/step_18.jpg" alt="Step 18" style="margin:auto">
+                    ---
+                    ## Fill in the Wi-Fi credentials
+                    Fill in the prompts with credentials for the Wi-Fi network that you want to connect to. When you are setting up two devices in the same space, you also have the option to include the Wi-Fi credentials of the network you want to send the device to. When you send the second device to someone, it will then automatically connect to their network.
+                    <img data-src="/img/buildguide/step_19.jpg" alt="Step 19" style="margin:auto">
+                    ---
+                    ## Exchange Yo–Yo Codes
+                    If you are setting up two devices in the same space, they have already exchanged Yo-Yo Codes automatically. Feel free to skip this step and press "Save".
+                    <img data-src="/img/buildguide/step_20.jpg" alt="Step 20" style="margin:auto">
+                    ---
+                    ## Exchange Yo–Yo Codes
+                    If not: Enter the Yo-Yo Codes for the partner devices in the text field named “Remote Yo-Yo Code”. It should be in the same format as yours eg: “4289 423988”. Once the forms are complete, press “Save”.
+                    <img data-src="/img/buildguide/step_20.jpg" alt="Step 20" style="margin:auto">
+                    ---
+                    ## Test that the devices are connected
+                    Wait for the devices' blue LEDs to blink 3 times to confirm the local wifi details are correct. If these details have been inputted incorrectly, please reconnect to the Yo-Yo-#### network and try again.
+                    <img data-src="/img/buildguide/step_21.jpg" alt="Step 21" style="margin:auto">
+                    ---
+                    ## Test that the devices are connected
+                    Once both devices have confirmed they can connect to their respective wifi networks, the connection between the devices can be tested. This is done by pressing the “BOOT” button of one device to blink the on-board led of the other.
+                    <img data-src="/img/buildguide/step_22.jpg" alt="Step 21" style="margin:auto">
+                  </textarea>
+                </section>
+                <section data-background-color="aquamarine">
+                  <h2>Section 3: Building the Yo-Yo Machine</h2>
+                </section>
+                <section data-markdown>
+                  <textarea data-template>
+                    ## What you will need
+                    Gather your components and take a moment to identify them.
+                    <img data-src="/img/buildguide/step_23.jpg" alt="Step 23" style="margin:auto">
+                    ---
+                    ## Addressable RGB LEDs - Variant 2
+                    DIN = Data In, VDD = Supply voltage, GND = Ground, DOUT = Data Out
+                    <img data-src="/img/buildguide/step_24.jpg" alt="Step 24" style="margin:auto">
+                    ---
+                    ## Addressable RGB LEDs - Variant 1
+                    DIN = Data In, VDD = Supply voltage, GND = Ground, DOUT = Data Out
+                    <img data-src="/img/buildguide/step_25.jpg" alt="Step 25" style="margin:auto">
+                    ---
+                    ## Breadboard
+                    Bread boards are used to create quick connections between electronic components. They have sockets that are electrically connected in rows. The connected sockets are shown as colored lines in this diagram.
+                    <img data-src="/img/buildguide/step_26.jpg" alt="Step 26" style="margin:auto">
+                    ---
+                    ## Using the breadboard
+                    Place LEDs in breadboard as pictured. Make sure the orientation of the LEDs are the same **(short legs to the left of the breadboard)**
+                    <img data-src="/img/buildguide/step_27.jpg" alt="Step 27" style="margin:auto">
+                    ---
+                    ## Using the breadboard
+                    Place LEDs in breadboard as pictured. Make sure the orientation of the LEDs are the same **(short legs to the left of the breadboard)**
+                    <img data-src="/img/buildguide/step_28.jpg" alt="Step 28" style="margin:auto">
+                    ---
+                    ## Using the breadboard
+                    Place LEDs in breadboard as pictured. Make sure the orientation of the LEDs are the same **(short legs to the left of the breadboard)**
+                    <img data-src="/img/buildguide/step_29.jpg" alt="Step 29" style="margin:auto">
+                    ---
+                    ## Placing the breadboard
+                    Place one side of the ESP32 onto the other side of the breadboard. The side used should be the same side as the button labelled boot.
+                    <img data-src="/img/buildguide/step_30.jpg" alt="Step 30" style="margin:auto">
+                    ---
+                    ## Placing the breadboard
+                    This is what we are going for. Make sure all the pins are lined up and give the ESP32 a good solid push to plug it all the way into the breadboard.
+                    <img data-src="/img/buildguide/step_31.jpg" alt="Step 31" style="margin:auto">
+                    ---
+                    ## Wiring the addressable LEDs - part 1
+                    Wire the leftmost pin (DIN) of the LED to pin D5 of the ESP32.
+                    <img data-src="/img/buildguide/step_32.jpg" alt="Step 32" style="margin:auto">
+                    ---
+                    ## Wiring the addressable LEDs - part 1
+                    Next, wire the adjacent two pins (VDD and GND) to the equivalent pins on the other LED.
+                    <img data-src="/img/buildguide/step_34.jpg" alt="Step 34" style="margin:auto">
+                    ---
+                    ## Wiring the addressable LEDs - part 2
+                    Connect the remaining leg (DOUT) of the lefthand LED to the leftmost leg (DIN) of the righthand LED
+                    <img data-src="/img/buildguide/step_35.jpg" alt="Step 35" style="margin:auto">
+                    ---
+                    ## Wiring the addressable LEDs - part 3
+                    Add a wire in line with the LED's centre left leg (VDD) and connect that to the ESP32 3v3 pin. This LED leg is the shorter leg of the middle legs.
+                    <img data-src="/img/buildguide/step_37.jpg" alt="Step 37" style="margin:auto">
+                    ---
+                    ## Wiring the addressable LEDs - part 3
+                    Add a wire in line with the LED's centre right leg (GND) and connect that to the ESP32 GND pin. This LED leg is the longer of the middle legs.
+                    <img data-src="/img/buildguide/step_38.jpg" alt="Step 38" style="margin:auto">
+                    ---
+                    ## Wiring the addressable LEDs - part 3
+                    Please check your wiring and make sure you have connected this correctly. Wiring your LED backwards can damage it permanently.
+                    <img data-src="/img/buildguide/step_39.jpg" alt="Step 39" style="margin:auto">
+                    ---
+                    ## Adding the capacitive touch wire
+                    Add the final jumper wire in line with ESP32 pin D4.
+                    <img data-src="/img/buildguide/step_40.jpg" alt="Step 40" style="margin:auto">
+                    ---
+                    ## Power up and repeat
+                    Plug in your USB micro cable.
+                    <img data-src="/img/buildguide/step_43.jpg" alt="Step 43" style="margin:auto">
+                    ---
+                    ## Power up and repeat
+                    Make another Light Touch device using the same steps (11 - 21).
+                    <img data-src="/img/buildguide/step_45.jpg" alt="Step 45" style="margin:auto">
+                    ---
+                    ## Check it's working
+                    Press and hold the capacitive touch lead (white) on one Light Touch device to scroll through different colours. Let go to select a colour.
+                    <img data-src="/img/buildguide/step_46.jpg" alt="Step 46" style="margin:auto">
+                    ---
+                    ## Check it's working
+                    Tap quickly on the capacitive touch lead to send this colour to the other Light Touch Device.
+                    <img data-src="/img/buildguide/step_47.jpg" alt="Step 47" style="margin:auto">
+                    ---
+                    ## Check it's working
+                    Using the second Light Touch, select and send a colour back.
+                    <img data-src="/img/buildguide/step_48.jpg" alt="Step 48" style="margin:auto">
+                  </textarea>
+                </section>
+                <section data-background-color="aquamarine">
+                  <h2>Section 4: Optional Extras</h2>
+                </section>
+                <section data-markdown>
+                  <textarea data-template>
+                    ## Adding an external button
+                    An external Button can be used instead of capacitive touch by adding a switch between pin D23 and GND on the ESP32.
+                    <img data-src="/img/buildguide/step_41.jpg" alt="Step 41" style="margin:auto">
+                    ---
+                    ## Adding an external button
+                    An external Button can be used instead of capacitive touch by adding a switch between pin D23 and GND on the ESP32.
+                    <img data-src="/img/buildguide/step_42.jpg" alt="Step 42" style="margin:auto">
+                    ---
+                    ## Cover red LED
+                    The red power LED on the ESP32S board can seem quite bright in a darkened space and interfere with the main LED's.
+                    <img data-src="/img/buildguide/step_50.jpg" alt="Step 49" style="margin:auto">
+                    ---
+                    ## Cover red LED
+                    Covering this LED with a piece of Blu Tack or tape will eliminate the issue.
+                    <img data-src="/img/buildguide/step_49.jpg" alt="Step 50" style="margin:auto">
+                    ---
+                    ## Adjusting fade time
+                    By default, the LED's are programmed to slowly fade to off over 6 hours from the last touch. However, the fade time can be adjusted by adding additional jumper leads.
+                    <img data-src="/img/buildguide/step_51.jpg" alt="Step 51" style="margin:auto">
+                    ---
+                    ## Adjusting fade time
+                    To reset the fade time to 3 hours from the last touch, to off, add a jumper lead between pin D22 on the ESP32S and ground (GND) as shown in the first picture.
+                    <img data-src="/img/buildguide/step_51.jpg" alt="Step 52" style="margin:auto">
+                    ---
+                    ## Adjusting fade time
+                    To reset the fade time to 1 hour from the last touch, to off, add a jumper lead between pin D21 on the ESP32S and ground (GND) as shown in the second picture.
+                    <img data-src="/img/buildguide/step_52.jpg" alt="Step 52" style="margin:auto">
+                    ---
+                    ## Building an enclosure
+                    Now that your Light Touch device is working you can now think about what kind of enclosure you want to encase it in.
+                    <img data-src="/img/buildguide/step_53.jpg" alt="Step 53" style="margin:auto">
+                    ---
+                    ## Building an enclosure
+                    We have a few examples in the Enclosure section of the website , or feel free to invent your own.
+                    <img data-src="/img/buildguide/step_54.jpg" alt="Step 54" style="margin:auto">
+                    ---
+                    ## That's it! Enjoy :)
+                    <img data-src="/img/buildguide/step_55.jpg" alt="Step 55" style="margin:auto">
+                  </textarea>
+                </section>
               </div>
             </div>
           </div>
