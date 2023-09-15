@@ -89,8 +89,7 @@ app.get("/faq", function (req, res) {
 app.get("/device", function (req, res) {
 	res.render("device");
 });
-app.get("/stats", cache(15*60), function (req, res) {
-	// this function will be held in cache for 15 minutes
+app.get("/stats", function (req, res) {
 	res.render("stats", { stats: stats });
 });
 app.get("/privacy", function (req, res) {
@@ -108,7 +107,7 @@ const update = require("./routes/update");
 app.use("/", update);
 
 const stats = require("./routes/stats");
-app.use("/stats_api", stats);
+app.use("/stats_api", cache(15*60), stats);
 
 // socket.io server
 const socketConfig = require("./socket-config");
