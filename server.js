@@ -2,7 +2,7 @@ const express = require("express");
 const http = require("http");
 const path = require("path");
 const mongoose = require("mongoose");
-const morgan = require("morgan");
+const mcache = require("memory-cache");
 const User = require("./models/user");
 const PORT = process.env.PORT || 5000;
 const chalk = require("chalk");
@@ -36,7 +36,25 @@ const server = http.createServer(app);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-// Setup logging
+// Caching middleware
+const cache = (duration) => {
+	return (req, res, next) => {
+		const key = `__express__${req.originalUrl}` || req.url;
+		const cachedBody = mcache.get(key);
+		if (cachedBody) {
+			res.send(cachedBody);
+			return;
+		} else {
+			res.sendResponse = res.send;
+			res.send = (body) => {
+				mcache.put(key, body, duration * 1000);
+				res.sendResponse(body);
+			};
+			next();
+		}
+	};
+};
+
 app.use(
 	morgan(
 		`🍄M ➡ ${chalk.gray("[:date[clf]]")} "${chalk.green(":method")} ${chalk.blue(":url")} HTTP/:http-version" ${chalk.gray(":remote-addr")}   ${chalk.yellow(
