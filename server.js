@@ -3,10 +3,13 @@ const http = require("http");
 const path = require("path");
 const mongoose = require("mongoose");
 const mcache = require("memory-cache");
-const User = require("./models/user");
-const PORT = process.env.PORT || 5000;
-const chalk = require("chalk");
 
+const User = require("./models/user");
+
+if (process.env.LOGGING === "true") {
+	const chalk = require("chalk");
+	const morgan = require("morgan");
+}
 // Connect to DB
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/node-testing", { useNewUrlParser: true, useUnifiedTopology: true }, (err, res) => {
 	if (err) {
@@ -55,14 +58,17 @@ const cache = (duration) => {
 	};
 };
 
-app.use(
-	morgan(
-		`🍄M ➡ ${chalk.gray("[:date[clf]]")} "${chalk.green(":method")} ${chalk.blue(":url")} HTTP/:http-version" ${chalk.gray(":remote-addr")}   ${chalk.yellow(
-			":status",
-		)} :res[content-length] ":referrer" ${chalk.gray('":user-agent"')}`,
-	),
-);
-console.info("Morgan logging enabled.");
+// Setup logging if enabled
+if (process.env.LOGGING === "true") {
+	app.use(
+		morgan(
+			`🍄M ➡ ${chalk.gray("[:date[clf]]")} "${chalk.green(":method")} ${chalk.blue(":url")} HTTP/:http-version" ${chalk.gray(":remote-addr")}   ${chalk.yellow(
+				":status",
+			)} :res[content-length] ":referrer" ${chalk.gray('":user-agent"')}`,
+		),
+	);
+	console.info("Morgan logging enabled.");
+}
 
 // Setup static files
 app.use(express.static(path.join(__dirname, "public")));
@@ -140,6 +146,7 @@ app.use((req, res) => {
 
 // Start server
 server.start = () => {
+	const PORT = process.env.PORT || 5000;
 	server.listen(PORT, () => {
 		console.info(`INFO: Server started on port ${PORT}.`);
 	});
