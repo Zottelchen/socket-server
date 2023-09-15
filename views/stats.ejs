@@ -3,42 +3,65 @@
 <div class="px-4 py-16 mx-auto">
   <div class="grid grid-cols-3 gap-4">
     <div class="text-center border-r">
-      <h6 class="text-5xl font-bold">42</h6>
+      <h6 class="text-5xl font-bold" id="online">Counting...</h6>
       <p class="font-medium tracking-widest uppercase text-base">
         Currently online
       </p>
     </div>
     <div class="text-center border-r">
-      <h6 class="text-5xl font-bold">42</h6>
+      <h6 class="text-5xl font-bold" id="users">Counting...</h6>
       <p class="font-medium tracking-widest uppercase text-base">
-        YYM seen
+        Users
       </p>
     </div>
     <div class="text-center border-r">
-      <h6 class="text-5xl font-bold">42</h6>
+      <h6 class="text-5xl font-bold" id="downloads">Counting...</h6>
       <p class="font-medium tracking-widest uppercase text-base">
         Downloads
       </p>
     </div>
     <div class="text-center border-r">
-      <h6 class="text-5xl font-bold">42</h6>
+      <h6 class="text-5xl font-bold" id="signals">TBD</h6>
       <p class="font-medium tracking-widest uppercase text-base">
         Signals sent
       </p>
     </div>
     <div class="text-center border-r">
-      <h6 class="text-5xl font-bold">42</h6>
+      <h6 class="text-5xl font-bold" id="shared">TBD</h6>
       <p class="font-medium tracking-widest uppercase text-base">
         Links shared
       </p>
     </div>
     <div class="text-center">
-      <h6 class="text-5xl font-bold">42</h6>
+      <h6 class="text-5xl font-bold">0</h6>
       <p class="font-medium tracking-widest uppercase text-base">
         Devices exploded
       </p>
     </div>
   </div>
 </div>
+
+<script>
+  //fetch /stats_api/now as json and replace the numbers above
+  function fetchNumbers() {
+    fetch("/stats_api/now")
+      .then(response => response.json())
+      .then(data => {
+        //console.log(data);
+        document.querySelector("#online").innerHTML = data.usersOnline;
+        document.querySelector("#users").innerHTML = data.users;
+        document.querySelector("#downloads").innerHTML = data.downloads.find(item => item.name === "Light Touch").download_count;
+      });
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    //console.log("DOM loaded and parsed");
+    fetchNumbers();
+  });
+
+  //update numbers every 10 seconds
+  //on second thought, lets not do that, as there is a rather strict ratelimit on Github API
+  //setInterval(fetchNumbers, 10000);
+</script>
 
 <%- include('./partials/page_end') %>

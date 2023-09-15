@@ -83,8 +83,9 @@ app.get("/faq", function (req, res) {
 app.get("/device", function (req, res) {
 	res.render("device");
 });
-app.get("/stats", function (req, res) {
-	res.render("stats");
+app.get("/stats", cache(15*60), function (req, res) {
+	// this function will be held in cache for 15 minutes
+	res.render("stats", { stats: stats });
 });
 app.get("/privacy", function (req, res) {
 	res.render("privacy");
@@ -101,7 +102,7 @@ const update = require("./routes/update");
 app.use("/", update);
 
 const stats = require("./routes/stats");
-app.use("/stats", stats);
+app.use("/stats_api", stats);
 
 // socket.io server
 const socketConfig = require("./socket-config");
