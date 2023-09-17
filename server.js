@@ -3,8 +3,9 @@ const http = require("http");
 const path = require("path");
 const mongoose = require("mongoose");
 const mcache = require("memory-cache");
+const { findSocketUuid, sendLight } = require("./device-functions");
 
-const User = require("./models/user");
+// const User = require("./models/user");
 
 if (process.env.LOGGING === "true") {
 	const chalk = require("chalk");
@@ -38,6 +39,9 @@ const server = http.createServer(app);
 // Setup View engine
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+
+// Setup Express body parser
+app.use(express.urlencoded({ extended: true }));
 
 // Caching middleware
 const cache = (duration) => {
@@ -87,10 +91,11 @@ app.get("/faq", function (req, res) {
 	res.render("faq");
 });
 app.get("/device", function (req, res) {
-	res.render("device");
+	res.render("device", { error: false });
 });
+
 app.get("/stats", function (req, res) {
-	res.render("stats", { stats: stats });
+	res.render("stats");
 });
 app.get("/privacy", function (req, res) {
 	res.render("privacy");
@@ -107,12 +112,35 @@ const update = require("./routes/update");
 app.use("/", update);
 
 const stats = require("./routes/stats");
-app.use("/stats_api", cache(15*60), stats);
+app.use("/stats_api", cache(15 * 60), stats);
 
 // socket.io server
 const socketConfig = require("./socket-config");
 const io = require("socket.io")(server);
 socketConfig(io);
+
+// Device Functions
+app.post("/device", function (req, res) {
+	if (!/^\d+$/.test(req.body.yymn) || req.body.yymn.length !== 10) {
+		// If the Yo-Yo Number is not a number
+		res.render("device", { error: "Please enter a valid Yo-Yo Number." });
+		return;
+	}
+
+	const socketUuid = findSocketUuid(req.body.yymn).then((socketUuid) => {
+		if (socketUuid === null) {
+			// If the Yo-Yo Number is not in the database
+			res.render("device", { error: "Yo-Yo Number not found. Please enter a valid Yo-Yo Number." });
+			return;
+		}
+
+		// generate random int between 0 and 255
+		const hue = Math.floor(Math.random() * 256);
+		// If the Yo-Yo Number is valid
+		sendLight(socketUuid, { macAddress: "0", data: { project: "lighttouch", hue: `${hue}` } }, io);
+		res.render("device-login", { form_data: req.body, socketUuid: socketUuid, hue: hue });
+	});
+});
 
 // Error handling
 /// Handle 500

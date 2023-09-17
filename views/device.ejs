@@ -1,5 +1,28 @@
 <%- include('./partials/page_start', {title: "🛠️My Device", page_title: "My Device"}) %>
+<noscript>
+  <p class="text-red-white font-bold bg-red-800 text-white w-max p-2">You need to enable JavaScript to use this site.</p>
+</noscript>
 
-<p>Wouldn't it be cool, if this page was already finished?</p>
+<p>To use this site you need to know your Yo-Yo number. The only way to access that number is to write it down during the initial setup!</p>
+
+<div class="flex items-center justify-center h-4/5 flex-col gap-5 space-y-2 bg-water-leaf-200 rounded-xl">
+  <form action="/device" method="POST" class="space-x-1 space-y-3 bg-water-leaf-100 p-10 rounded-xl">
+    <%- error ? '<p class="text-red-white font-bold bg-red-800 text-white w-max p-2">' + error + '</p>' : '' %>
+    <label for="yymn" class="font-bold block">Yo-Yo Number</label>
+    <input type="text" name="yymn" id="yymn" placeholder="1234567890" required class="block w-max" pattern="[0-9]{10}" title="Please enter exactly 10 numbers">
+    <button type="login" class="py-2 px-4 border border-solid rounded-2xl font-semibold text-white bg-water-leaf-600 ">Login</button>
+    <button type="connection" class="py-2 px-4 border border-solid rounded-2xl font-semibold text-white bg-indigo-600">Test Connection</button>
+  </form>
+</div>
+
+
+<%#
+#START:GENERATEID
+chipID: 141385091639112
+low: 3358222302
+high: 32918
+out: 3358222302
+#ENDOF:GENERATEID
+#%>
 
 <%- include('./partials/page_end') %>
