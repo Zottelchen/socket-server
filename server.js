@@ -148,8 +148,10 @@ app.post("/device", function (req, res) {
 		const cacheLogin = cacheLogins.find((login) => login.yoyo === req.body.yymn);
 		const session_uid = getRandomUUID();
 		if (cacheLogin) {
+			cacheLogin.session_uuid = session_uid;
 			cacheLogin.hue = hue;
 			cacheLogin.time = Date.now();
+			cacheLogin.returned = false;
 		} else {
 			cacheLogins.push({ session_uuid: session_uid, yoyo: req.body.yymn, hue: hue, time: Date.now(), returned: false,  });
 		}
@@ -189,7 +191,8 @@ app.get("/device-check", function (req, res) {
 app.get("/device-control", function (req, res) {
 	const salt = req.query.token.split("$")[0];
 	const key = getKeyFromPassword(SECRET_KEY, Buffer.from(salt, "hex"));
-	const yoyo = decrypt(req.query.token.split("$")[1], key);
+	const encrypted = Buffer.from(req.query.token.split("$")[1], "hex");
+	const yoyo = decrypt(encrypted, key);
 	if (yoyo) {
 		// Check if Yoyo is in database
 		findSocketUuid(yoyo).then((socketUuid) => {
