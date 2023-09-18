@@ -4,6 +4,7 @@ const path = require("path");
 const mongoose = require("mongoose");
 const mcache = require("memory-cache");
 const { findSocketUuid, sendLight } = require("./device-functions");
+const { encrypt, decrypt, getKeyFromPassword, getSalt, getRandomUUID } = require("./crypto-functions");
 
 // const User = require("./models/user");
 
@@ -11,6 +12,7 @@ if (process.env.LOGGING === "true") {
 	const chalk = require("chalk");
 	const morgan = require("morgan");
 }
+
 // Connect to DB
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/node-testing", { useNewUrlParser: true, useUnifiedTopology: true }, (err, res) => {
 	if (err) {
@@ -91,6 +93,10 @@ app.get("/faq", function (req, res) {
 	res.render("faq");
 });
 app.get("/device", function (req, res) {
+	if (req.query.session_missing === "") {
+		res.render("device", { error: "Session missing. Please enter a valid Yo-Yo Number." });
+		return;
+	}
 	res.render("device", { error: false });
 });
 
@@ -115,31 +121,87 @@ const stats = require("./routes/stats");
 app.use("/stats_api", cache(15 * 60), stats);
 
 // socket.io server
+let cacheLogins = [];
 const socketConfig = require("./socket-config");
 const io = require("socket.io")(server);
-socketConfig(io);
+socketConfig(io, cacheLogins);
 
 // Device Functions
 app.post("/device", function (req, res) {
+	// If the Yo-Yo Number is not a number
 	if (!/^\d+$/.test(req.body.yymn) || req.body.yymn.length !== 10) {
-		// If the Yo-Yo Number is not a number
 		res.render("device", { error: "Please enter a valid Yo-Yo Number." });
 		return;
 	}
 
 	const socketUuid = findSocketUuid(req.body.yymn).then((socketUuid) => {
+		// If the Yo-Yo Number is not in the database
 		if (socketUuid === null) {
-			// If the Yo-Yo Number is not in the database
 			res.render("device", { error: "Yo-Yo Number not found. Please enter a valid Yo-Yo Number." });
 			return;
 		}
 
-		// generate random int between 0 and 255
-		const hue = Math.floor(Math.random() * 256);
 		// If the Yo-Yo Number is valid
-		sendLight(socketUuid, { macAddress: "0", data: { project: "lighttouch", hue: `${hue}` } }, io);
-		res.render("device-login", { form_data: req.body, socketUuid: socketUuid, hue: hue });
+		const hue = Math.floor(Math.random() * 256);
+
+		// Check if already in cache: if yes, overwrite, else add
+		const cacheLogin = cacheLogins.find((login) => login.yoyo === req.body.yymn);
+		const session_uid = getRandomUUID();
+		if (cacheLogin) {
+			cacheLogin.hue = hue;
+			cacheLogin.time = Date.now();
+		} else {
+			cacheLogins.push({ session_uuid: session_uid, yoyo: req.body.yymn, hue: hue, time: Date.now(), returned: false,  });
+		}
+
+		// Send the light
+		sendLight(socketUuid, hue, io);
+		res.render("device-login", { hue: hue, session_uuid: session_uid });
+
+		//remove from cache after 15 minutes
+		setTimeout(() => {
+			cacheLogins = cacheLogins.filter((login) => login.time + 900000 > Date.now());
+		}, 900001);
 	});
+});
+
+const SECRET_KEY = process.env.SECRET_KEY || "secret";
+if (SECRET_KEY === "secret") {
+	console.warn("WARNING: Environment SECRET_KEY not set.");
+}
+
+app.get("/device-check", function (req, res) {
+	const cacheLogin = cacheLogins.find((login) => login.session_uuid === req.query.session_uuid);
+	if (cacheLogin) {
+		if (cacheLogin.returned) {
+			const salt = getSalt();
+			const key = getKeyFromPassword(SECRET_KEY, salt);
+			const token = `${salt.toString("hex")}$${encrypt(cacheLogin.yoyo, key).toString("hex")}`;
+			res.send({ success: true, error: false, url: `/device-control?token=${token}` });
+		} else {
+			res.send({ success: false, error: false, url: false });
+		}
+	} else {
+		res.send({ success: false, error: "No session found.", url: "/device?session_missing" });
+	}
+});
+
+app.get("/device-control", function (req, res) {
+	const salt = req.query.token.split("$")[0];
+	const key = getKeyFromPassword(SECRET_KEY, Buffer.from(salt, "hex"));
+	const yoyo = decrypt(req.query.token.split("$")[1], key);
+	if (yoyo) {
+		// Check if Yoyo is in database
+		findSocketUuid(yoyo).then((socketUuid) => {
+			if (socketUuid === null) {
+				res.render("device", { error: "Yo-Yo Number not found. Please enter a valid Yo-Yo Number." });
+				return;
+			}
+			res.render("device-control", { yoyo: yoyo });
+		});
+	} else {
+		res.render("device", { error: "We could not find a Yo-Yo with that key. Please enter a valid Yo-Yo Number and try to login again." });
+	}
 });
 
 // Error handling
