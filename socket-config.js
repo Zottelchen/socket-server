@@ -1,7 +1,9 @@
 const User = require("./models/user");
 const Message = require("./models/message");
+const { addToStat } = require("./stat-functions");
+const { findYoyo } = require("./device-functions");
 
-module.exports = (io) => {
+module.exports = (io, cacheLogins) => {
 	const sendCachedMessage = (user) => {
 		Message.findOne({ user: user._id }).exec((err, message) => {
 			if (err) {
@@ -13,9 +15,7 @@ module.exports = (io) => {
 					return null;
 				} else {
 					io.to(user.socketUuid).emit("msg qos1", message.message);
-					console.log(
-						`INFO: Cached message found and delivered for user ${user.macAddress}`,
-					);
+					console.log(`INFO: Cached message found and delivered for user ${user.macAddress}`);
 				}
 			}
 		});
@@ -56,12 +56,10 @@ module.exports = (io) => {
 			User.findOne({ macAddress: data.macAddress }).exec((err, user) => {
 				if (err) {
 					console.log("ERROR-3: Could not search for user.");
-					console.log(err)
+					console.log(err);
 				} else {
 					if (!user) {
-						console.log(
-							`INFO: User ${data.macAddress} not found, creating new user.`,
-						);
+						console.log(`INFO: User ${data.macAddress} not found, creating new user.`);
 						const newUser = User({
 							macAddress: data.macAddress,
 							socketUuid: socket.id,
@@ -71,9 +69,7 @@ module.exports = (io) => {
 								console.log("ERROR-4: Could not save user.");
 								console.log(_err);
 							} else {
-								console.log(
-									`INFO: Created new user with mac address ${_data.macAddress}`,
-								);
+								console.log(`INFO: Created new user with mac address ${_data.macAddress}`);
 							}
 						});
 					} else {
@@ -89,28 +85,52 @@ module.exports = (io) => {
 
 		// When user sends a message, send it to the destination
 		socket.on("msg", (data, id) => {
-			// Forward message to pair
-			console.log(`INFO: Got message addressed to ${data.macAddress}`);
-			User.findOne({ macAddress: data.macAddress }).exec((err, user) => {
-				if (err) {
-					console.log("ERROR-5: Could not search.");
-					console.log(err)
-				} else if (user) {
-					if (user.socketUuid !== null) {
-						// Send message
-						io.to(user.socketUuid).emit("msg", data);
-						console.log(`INFO: Delivered message to ${user.socketUuid}`);
-					} else {
-						console.log(`INFO: User ${user.macAddress} is disconnected.`);
-						socket.emit("partner offline");
+			// Intercept message if data.macAdress in loginCache
+			let intercept = false;
+			if (cacheLogins) {
+				findYoyo(socket.id).then((yoyo) => {
+					console.log(yoyo, typeof yoyo);
+					const cacheLogin = cacheLogins.find((login) => login.yoyo === yoyo);
+					if (cacheLogin.returned) {
+						return;
 					}
-				} else {
-					console.log(
-						`INFO: User ${data.macAddress} could not be found in the database.`,
-					);
-					socket.emit("unknown user");
-				}
-			});
+					if (cacheLogin) {
+						console.log(`INFO: Intercepted message from ${yoyo}. Hue: ${data.data.hue}`);
+						intercept = true;
+						// if data.data.hue is in 10% range of cacheLogin.hue, set cacheLogin.returned to true
+						if (data.data.hue >= cacheLogin.hue * 0.9 && data.data.hue <= cacheLogin.hue * 1.1) {
+							cacheLogin.returned = true;
+							console.log("INFO: Hue is in range, setting returned to true.");
+						} else {
+							console.log("INFO: Hue is not in range.");
+						}
+					}
+				});
+			}
+
+			if (!intercept) {
+				// Forward message to pair
+				console.log(`INFO: Got message addressed to ${data.macAddress}`);
+				User.findOne({ macAddress: data.macAddress }).exec((err, user) => {
+					if (err) {
+						console.log("ERROR-5: Could not search.");
+						console.log(err);
+					} else if (user) {
+						if (user.socketUuid !== null) {
+							// Send message
+							io.to(user.socketUuid).emit("msg", data);
+							addToStat("messages_sent", 1);
+							console.log(`INFO: Delivered message to ${user.socketUuid}`);
+						} else {
+							console.log(`INFO: User ${user.macAddress} is disconnected.`);
+							socket.emit("partner offline");
+						}
+					} else {
+						console.log(`INFO: User ${data.macAddress} could not be found in the database.`);
+						socket.emit("unknown user");
+					}
+				});
+			}
 		});
 
 		socket.on("msg qos1", (data, id) => {
@@ -126,16 +146,12 @@ module.exports = (io) => {
 						io.to(user.socketUuid).emit("msg qos1", data);
 						console.log(`INFO: Delivered message to ${user.socketUuid}`);
 					} else {
-						console.log(
-							`INFO: User ${user.macAddress} is disconnected, message will be cached.`,
-						);
+						console.log(`INFO: User ${user.macAddress} is disconnected, message will be cached.`);
 						socket.emit("partner offline");
 						cacheMessage(user, data);
 					}
 				} else {
-					console.log(
-						`INFO: User ${data.macAddress} could not be found in the database.`,
-					);
+					console.log(`INFO: User ${data.macAddress} could not be found in the database.`);
 					socket.emit("unknown user");
 				}
 			});
