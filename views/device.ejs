@@ -9,18 +9,18 @@
     <label for="yymn" class="font-bold block">Yo-Yo Number</label>
     <input type="text" name="yymn" id="yymn" placeholder="1234567890" required class="block w-max" pattern="[0-9]{10}" title="Please enter exactly 10 numbers">
     <button type="login" class="py-2 px-4 border border-solid rounded-2xl font-semibold text-white bg-water-leaf-600 ">Login</button>
-    <button type="connection" class="py-2 px-4 border border-solid rounded-2xl font-semibold text-white bg-indigo-600">Test Connection</button>
+    <%# TODO: <button type="connection" class="py-2 px-4 border border-solid rounded-2xl font-semibold text-white bg-indigo-600">Test Connection</button> %>
   </form>
 </div>
 
+<script>
+  document.getElementById('yymn').focus();
 
-<%#
-#START:GENERATEID
-chipID: 141385091639112
-low: 3358222302
-high: 32918
-out: 3358222302
-#ENDOF:GENERATEID
-#%>
-
+  // TODO: remove this, it's just for testing
+  document.getElementById('yymn').addEventListener('input', function(e) {
+    e.target.value = e.target.value.replace(/green/g, '3358222302');
+    e.target.value = e.target.value.replace(/red/g, 'TODO');
+    e.target.value = e.target.value.replace(/blue/g, 'TODO');
+  });
+</script>
 <%- include('./partials/page_end') %>
