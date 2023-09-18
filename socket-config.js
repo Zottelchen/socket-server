@@ -89,7 +89,6 @@ module.exports = (io, cacheLogins) => {
 			let intercept = false;
 			if (cacheLogins) {
 				findYoyo(socket.id).then((yoyo) => {
-					console.log(yoyo, typeof yoyo);
 					const cacheLogin = cacheLogins.find((login) => login.yoyo === yoyo);
 					if (cacheLogin.returned) {
 						return;
@@ -102,7 +101,7 @@ module.exports = (io, cacheLogins) => {
 							cacheLogin.returned = true;
 							console.log("INFO: Hue is in range, setting returned to true.");
 						} else {
-							console.log("INFO: Hue is not in range.");
+							console.log("INFO: Hue is not in range: ", data.data.hue, cacheLogin.hue);
 						}
 					}
 				});
