@@ -6,6 +6,33 @@
   <p>We send you a color. Please try to match the color and send it back. That way we know it is you :)</p>
 </div>
 
-<%# TODO: write JS to redirect to /device-control if success %>
+<script>
+  // check /device-check every 5 seconds with uid
+  // if success, redirect to /device-control
+  // if fail, redirect to /device-login
+  setInterval(function() {
+    fetch('/device-check?session_uuid=<%= session_uuid %>', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      })
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
+        if (data.success) {
+          window.location.href = data.url;
+          console.log('success');
+        }
+        if (data.error) {
+          window.location.href = data.url;
+          console.log('error');
+        }
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }, 5000);
+</script>
 
 <%- include('./partials/page_end') %>
