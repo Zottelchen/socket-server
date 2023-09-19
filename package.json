@@ -30,6 +30,7 @@
     "autoprefixer": "^10.4.15",
     "chai": "^4.3.8",
     "chai-http": "^4.4.0",
+    "daisyui": "^3.7.5",
     "jasmine": "^3.99.0",
     "mocha": "^10.2.0",
     "socket.io-client": "^2.3.0",
