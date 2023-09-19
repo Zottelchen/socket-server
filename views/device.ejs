@@ -4,7 +4,7 @@
 <p>To use this site you need to know your Yo-Yo number. The only way to access that number is to write it down during the initial setup!</p>
 
 <div class="flex items-center justify-center h-4/5 flex-col gap-5 space-y-2 bg-water-leaf-200 rounded-xl">
-  <form action="/device" method="POST" class="space-x-1 space-y-3 bg-water-leaf-100 p-10 rounded-xl">
+  <form action="/device" method="POST" class="space-x-1 space-y-3 bg-water-leaf-100 dark:bg-water-leaf-900 p-10 rounded-xl">
     <%- error ? '<p class="text-red-white font-bold bg-red-800 text-white w-max p-2">' + error + '</p>' : '' %>
     <label for="yymn" class="font-bold block">Yo-Yo Number</label>
     <input type="text" name="yymn" id="yymn" placeholder="1234567890" required class="block w-max input input-bordered" pattern="[0-9]{10}" title="Please enter exactly 10 numbers">
@@ -19,7 +19,7 @@
   // TODO: remove this, it's just for testing
   document.getElementById('yymn').addEventListener('input', function(e) {
     e.target.value = e.target.value.replace(/green/g, '3358222302');
-    e.target.value = e.target.value.replace(/red/g, 'TODO');
+    e.target.value = e.target.value.replace(/red/g, '1634061307');
     e.target.value = e.target.value.replace(/blue/g, 'TODO');
   });
 </script>

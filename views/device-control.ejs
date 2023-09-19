@@ -1,7 +1,7 @@
 <%- include('./partials/page_start', {title:"🛠️My Device - Control Panel", page_title:"My Device"}) %>
 <%- include('./partials/javascript-required') %>
 <p>Here you can edit the image, the notes and send links to your Yo-Yo machine. Additionally you can create links to send lights or share this page as read-only. We recommend to bookmark this page, so you won't have to login again.</p>
-<div id="main" class="flex flex-col gap-5 space-y-1 bg-water-leaf-200 rounded-xl p-5">
+<div id="main" class="flex flex-col gap-5 space-y-1 bg-water-leaf-200 rounded-xl p-5 dark:bg-water-leaf-800">
   <h2 class="text-3xl"><%= name %> <button type="editName" class="hover:text-water-leaf-100"><%- include('./partials/icons/pencil-square') %></button></h2>
 
   <%# Device Info %>
