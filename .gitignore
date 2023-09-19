@@ -116,5 +116,5 @@ dist
 .pnp.*
 
 # ignore
-views/test.ejs
 public/css/style.css
+tmp.js
