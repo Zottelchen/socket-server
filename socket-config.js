@@ -104,29 +104,29 @@ module.exports = (io, cacheLogins) => {
 							console.log("INFO: Hue is not in range: ", data.data.hue, cacheLogin.hue);
 						}
 					}
-				});
-			}
 
-			if (!intercept) {
-				// Forward message to pair
-				console.log(`INFO: Got message addressed to ${data.macAddress}`);
-				User.findOne({ macAddress: data.macAddress }).exec((err, user) => {
-					if (err) {
-						console.log("ERROR-5: Could not search.");
-						console.log(err);
-					} else if (user) {
-						if (user.socketUuid !== null) {
-							// Send message
-							io.to(user.socketUuid).emit("msg", data);
-							addToStat("messages_sent", 1);
-							console.log(`INFO: Delivered message to ${user.socketUuid}`);
-						} else {
-							console.log(`INFO: User ${user.macAddress} is disconnected.`);
-							socket.emit("partner offline");
-						}
-					} else {
-						console.log(`INFO: User ${data.macAddress} could not be found in the database.`);
-						socket.emit("unknown user");
+					if (!intercept) {
+						// Forward message to pair
+						console.log(`INFO: Got message addressed to ${data.macAddress}`);
+						User.findOne({ macAddress: data.macAddress }).exec((err, user) => {
+							if (err) {
+								console.log("ERROR-5: Could not search.");
+								console.log(err);
+							} else if (user) {
+								if (user.socketUuid !== null) {
+									// Send message
+									io.to(user.socketUuid).emit("msg", data);
+									addToStat("messages_sent", 1);
+									console.log(`INFO: Delivered message to ${user.socketUuid}`);
+								} else {
+									console.log(`INFO: User ${user.macAddress} is disconnected.`);
+									socket.emit("partner offline");
+								}
+							} else {
+								console.log(`INFO: User ${data.macAddress} could not be found in the database.`);
+								socket.emit("unknown user");
+							}
+						});
 					}
 				});
 			}
