@@ -1,11 +1,117 @@
-<%- include('./partials/page_start', {title: "🛠️My Device - Processing Login", page_title: "My Device"}) %>
+<%- include('./partials/page_start', {title:"🛠️My Device - Control Panel", page_title:"My Device"}) %>
 <%- include('./partials/javascript-required') %>
+<p>Here you can edit the image, the notes and send links to your Yo-Yo machine. Additionally you can create links to send lights or share this page as read-only. We recommend to bookmark this page, so you won't have to login again.</p>
+<div id="main" class="flex flex-col gap-5 space-y-1 bg-water-leaf-200 rounded-xl p-5">
+  <h2 class="text-3xl"><%= name %> <button type="editName" class="hover:text-water-leaf-100"><%- include('./partials/icons/pencil-square') %></button></h2>
 
-<div class="flex items-center justify-center h-4/5 flex-col gap-5 space-y-2 bg-water-leaf-200 rounded-xl">
-  <h2 class="text-3xl"><%- yoyo %></h2>
-  <p>Here you can edit the image, the notes and send links to your Yo-Yo machine. Additionally you can create links to send lights or share this page as read-only. We recommend to bookmark this page, so you won't have to login again.</p>
-</div>
+  <%# Device Info %>
+  <div class="text-1xl">Yo-Yo Number: <%= yoyo %>
+    <input value="<%= yoyo %>" disabled class="hidden">
+    <button type="copy" class="hover:text-water-leaf-100 tooltip-open" data-tip="Copied!"><%- include('./partials/icons/clipboard-copy') %></button>
+  </div>
 
-<%# TODO: add function to this page! %>
+  <%# Image & Notes %>
+  <div class="flex flex-row gap-2">
+    <img src="<%= image %>" alt="Yo-Yo Image" class="rounded-xl w-1/2">
+    <textarea class="textarea textarea-bordered w-1/2" placeholder="You can write notes about your Yo-Yo machine here! For example you can write down, which color means what to you."></textarea>
+  </div>
 
-<%- include('./partials/page_end') %>
+  <%# Buttons %>
+  <div class="flex flex-row gap-2">
+    <button type="light" class="btn font-semibold text-white bg-yellow-600 hover:bg-yellow-400 focus:bg-yellow-400"><%- include('./partials/icons/light-bulb') %> Send Light</button>
+    <button type="rainbow" class="btn font-semibold text-white bg-red-600 hover:bg-yellow-400 focus:bg-green-400" onclick="this.blur();"><%- include('./partials/icons/star') %> Send Rainbow</button>
+    <div class="border-r border-water-leaf-900 gap-4"></div>
+    <button type="saveImage" class="btn font-semibold text-white bg-cyan-600 hover:bg-cyan-400 focus:bg-cyan-400" onclick="imageUpload.showModal()"><%- include('./partials/icons/camera') %> Upload new Image</button>
+    <button type="saveNote" class="btn font-semibold text-white bg-cyan-600 hover:bg-cyan-400 focus:bg-cyan-400"><%- include('./partials/icons/check') %> Save Note</button>
+    <div class="border-r border-water-leaf-900 gap-4"></div>
+    <button type="showLinks" class="btn font-semibold text-white bg-water-leaf-600 hover:bg-water-leaf-400 focus:bg-water-leaf-400"><%- include('./partials/icons/eye') %> Show Links</button>
+  </div>
+
+  <%# LINKS, default hidden %>
+  <div id="links" class="flex flex-col gap-2 hidden">
+    <div class="flex flex-col gap-2 px-2">
+      <label class="py-2 font-semibold" for="light-link">Light-Link
+        <span class="tooltip" data-tip="With this link you can send a light directly to your Yo-Yo machine. You can also append a hue like '&hue=127'. Values from 0 to 255 are possible.">
+          <%- include('./partials/icons/information-circle') %>
+        </span>
+      </label>
+      <div class="flex flex-row items-center gap-2">
+        <input type="text" id="light-link" class="input input-bordered w-full input-sm bg-gray-200" value="<%= host %>/device-light?id=<%= token_send %>" readonly>
+        <button type="copy" class="hover:text-water-leaf-100 tooltip-open" data-tip="Copied!"><%- include('./partials/icons/clipboard-copy') %></button>
+      </div>
+    </div>
+    <div class="flex flex-col gap-2 px-2">
+      <label class="py-2 font-semibold" for="view-link">View-Link
+        <span class="tooltip" data-tip="With this link you can share a read-only version of this page, to share your notes or Yo-Yo machine.">
+          <%- include('./partials/icons/information-circle') %>
+        </span>
+      </label>
+      <div class="flex flex-row items-center gap-2">
+        <input type="text" id="view-link" class="input input-bordered w-full input-sm bg-gray-200" value="<%= host %>/device-view?id=<%= token_view %>" readonly>
+        <button type="copy" class="hover:text-water-leaf-100 tooltip-open" data-tip="Copied!"><%- include('./partials/icons/clipboard-copy') %></button>
+      </div>
+    </div>
+    <div class="flex flex-col gap-2 px-2">
+      <label class="py-2 font-semibold" for="connect-token">Connect token
+        <span class="tooltip" data-tip="If you want other Yo-Yo machines to send a light to this one, you need to use this connect token.">
+          <%- include('./partials/icons/information-circle') %>
+        </span>
+      </label>
+      <div class="flex flex-row items-center gap-2">
+        <input type="text" id="connect-token" class="input input-bordered w-full input-sm bg-gray-200" value="<%= token_connect %>" readonly>
+        <button type="copy" class="hover:text-water-leaf-100 tooltip-open" data-tip="Copied!"><%- include('./partials/icons/clipboard-copy') %></button>
+      </div>
+    </div>
+  </div>
+
+  <%# TODO: make the buttons do something %>
+  <dialog id="imageUpload" class="modal">
+    <div class="modal-box">
+      <form method="dialog">
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+      </form>
+      <h3 class="font-bold text-lg">Hello!</h3>
+      <p class="py-4">Press ESC key or click on ✕ button to close</p>
+    </div>
+  </dialog>
+
+
+  <script>
+    //toggle visibility of links
+    const eye = `<%- include("./partials/icons/eye") %>`;
+    const eyeSlash = `<%- include("./partials/icons/eye-slash") %>`;
+    document.querySelector("button[type='showLinks']").addEventListener("click", function() {
+      document.querySelector("#links").classList.toggle("hidden");
+      // change button text
+      if (document.querySelector("#links").classList.contains("hidden")) {
+        document.querySelector("button[type='showLinks']").innerHTML = `${eye} Show Links`;;
+        document.querySelector("#main").scrollIntoView({
+          behavior: "smooth"
+        });
+      } else {
+        document.querySelector("button[type='showLinks']").innerHTML = `${eyeSlash} Hide Links`;;
+        document.querySelector("#links").scrollIntoView({
+          behavior: "smooth"
+        });
+      }
+    });
+
+    //copy to clipboard button
+    const copy = `<%- include("./partials/icons/clipboard-copy") %>`;
+    document.querySelectorAll("button[type='copy']").forEach((button) => {
+      button.addEventListener("click", function() {
+        const input = this.parentElement.querySelector("input");
+        input.select();
+        input.setSelectionRange(0, 99999); /*For mobile devices*/
+        document.execCommand("copy");
+        navigator.clipboard.writeText(input.value);
+        this.classList.toggle("tooltip");
+        setTimeout(() => {
+          this.classList.toggle("tooltip");
+        }, 1000);
+      });
+    });
+  </script>
+
+
+  <%- include('./partials/page_end') %>

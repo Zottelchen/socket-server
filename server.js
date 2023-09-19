@@ -3,7 +3,7 @@ const http = require("http");
 const path = require("path");
 const mongoose = require("mongoose");
 const mcache = require("memory-cache");
-const { findSocketUuid, sendLight } = require("./device-functions");
+const { findSocketUuid, sendLight, getNote } = require("./device-functions");
 const { encrypt, decrypt, getKeyFromPassword, getSalt, getRandomUUID } = require("./crypto-functions");
 
 // const User = require("./models/user");
@@ -110,10 +110,6 @@ app.get("/about", function (req, res) {
 	res.render("about");
 });
 
-app.get("/test", function (req, res) {
-	res.render("test");
-});
-
 const update = require("./routes/update");
 app.use("/", update);
 
@@ -134,7 +130,7 @@ app.post("/device", function (req, res) {
 		return;
 	}
 
-	const socketUuid = findSocketUuid(req.body.yymn).then((socketUuid) => {
+	findSocketUuid(req.body.yymn).then((socketUuid) => {
 		// If the Yo-Yo Number is not in the database
 		if (socketUuid === null) {
 			res.render("device", { error: "Yo-Yo Number not found. Please enter a valid Yo-Yo Number." });
@@ -153,7 +149,7 @@ app.post("/device", function (req, res) {
 			cacheLogin.time = Date.now();
 			cacheLogin.returned = false;
 		} else {
-			cacheLogins.push({ session_uuid: session_uid, yoyo: req.body.yymn, hue: hue, time: Date.now(), returned: false,  });
+			cacheLogins.push({ session_uuid: session_uid, yoyo: req.body.yymn, hue: hue, time: Date.now(), returned: false });
 		}
 
 		// Send the light
@@ -200,7 +196,21 @@ app.get("/device-control", function (req, res) {
 				res.render("device", { error: "Yo-Yo Number not found. Please enter a valid Yo-Yo Number." });
 				return;
 			}
-			res.render("device-control", { yoyo: yoyo });
+
+			// Get Note from Database
+			getNote(yoyo).then((note) => {
+				res.render("device-control", {
+					token: req.query.token,
+					yoyo: yoyo,
+					name: note.name,
+					note: note.note,
+					token_view: note.token_view,
+					token_send: note.token_send,
+					token_connect: note.token_connect,
+					image: note.image,
+					host: `${req.protocol}://${req.headers.host}`,
+				});
+			});
 		});
 	} else {
 		res.render("device", { error: "We could not find a Yo-Yo with that key. Please enter a valid Yo-Yo Number and try to login again." });

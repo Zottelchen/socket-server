@@ -7,9 +7,9 @@
   <form action="/device" method="POST" class="space-x-1 space-y-3 bg-water-leaf-100 p-10 rounded-xl">
     <%- error ? '<p class="text-red-white font-bold bg-red-800 text-white w-max p-2">' + error + '</p>' : '' %>
     <label for="yymn" class="font-bold block">Yo-Yo Number</label>
-    <input type="text" name="yymn" id="yymn" placeholder="1234567890" required class="block w-max" pattern="[0-9]{10}" title="Please enter exactly 10 numbers">
-    <button type="login" class="py-2 px-4 border border-solid rounded-2xl font-semibold text-white bg-water-leaf-600 ">Login</button>
-    <%# TODO: <button type="connection" class="py-2 px-4 border border-solid rounded-2xl font-semibold text-white bg-indigo-600">Test Connection</button> %>
+    <input type="text" name="yymn" id="yymn" placeholder="1234567890" required class="block w-max input input-bordered" pattern="[0-9]{10}" title="Please enter exactly 10 numbers">
+    <button type="login" class="btn font-semibold text-white bg-water-leaf-600 hover:bg-water-leaf-400 focus:bg-water-leaf-400"><%- include('./partials/icons/user') %> Login</button>
+    <%# TODO: <button type="connection" class="btn font-semibold text-white bg-indigo-600 hover:bg-indigo-400 focus:bg-indigo-400">Test Connection</button> %>
   </form>
 </div>
 
