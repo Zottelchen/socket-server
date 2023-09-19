@@ -1,46 +1,61 @@
 <%- include('./partials/page_start', {title: "📈Stats", page_title: "Statistics & Numbers"}) %>
 <%- include('./partials/javascript-required') %>
 
-<div class="px-4 py-16 mx-auto">
-  <div class="grid grid-cols-3 gap-4">
-    <div class="text-center border-r">
-      <h6 class="text-5xl font-bold" id="online">Counting...</h6>
-      <p class="font-medium tracking-widest uppercase text-base">
-        Currently online
-      </p>
+<div class="grid grid-cols-1 gap-1">
+  <div class="stats stats-vertical lg:stats-horizontal shadow">
+    <div class="stat">
+      <div class="stat-title">Currently online</div>
+      <div class="stat-value" id="online">Counting...</div>
+      <div class="stat-figure tooltip tooltip-left lg:tooltip-right" data-tip="How many users are connected to the server"><%- include('./partials/icons/user') %></div>
     </div>
-    <div class="text-center border-r">
-      <h6 class="text-5xl font-bold" id="users">Counting...</h6>
-      <p class="font-medium tracking-widest uppercase text-base">
-        Users
-      </p>
+
+    <div class="stat">
+      <div class="stat-title">Users</div>
+      <div class="stat-value" id="users">Counting...</div>
+      <div class="stat-figure tooltip tooltip-left lg:tooltip-right" data-tip="Total of users which have been connected to this server"><%- include('./partials/icons/users') %></div>
     </div>
-    <div class="text-center border-r">
-      <h6 class="text-5xl font-bold" id="downloads">Counting...</h6>
-      <p class="font-medium tracking-widest uppercase text-base">
-        Downloads
-      </p>
+
+    <div class="stat">
+      <div class="stat-title">Downloads</div>
+      <div class="stat-value" id="downloads">Counting...</div>
+      <div class="stat-figure tooltip tooltip-left" data-tip="How often the Lighttouch project has been downloaded from Github"><%- include('./partials/icons/arrow-down-tray') %></div>
     </div>
-    <div class="text-center border-r">
-      <h6 class="text-5xl font-bold" id="signals">TBD</h6> <%# todo: hookup %>
-      <p class="font-medium tracking-widest uppercase text-base">
-        Signals sent
-      </p>
+
+    <div class="stat">
+      <div class="stat-title" id="signals">Lights sent</div>
+      <div class="stat-value">TBD</div> <%# todo: hookup %>
+      <div class="stat-figure tooltip tooltip-left" data-tip="How many lights have been sent with this server"><%- include('./partials/icons/light-bulb') %></div>
     </div>
-    <div class="text-center border-r">
-      <h6 class="text-5xl font-bold" id="shared">TBD</h6>
-      <p class="font-medium tracking-widest uppercase text-base">
-        Links shared
-      </p>
+  </div>
+
+  <div class="stats stats-vertical lg:stats-horizontal shadow">
+    <div class="stat">
+      <div class="stat-title">Links shared</div>
+      <div class="stat-value">TBD</div> <%# todo: hookup %>
+      <div class="stat-figure tooltip tooltip-left lg:tooltip-right" data-tip="How often view links have been opened"><%- include('./partials/icons/share') %></div>
     </div>
-    <div class="text-center">
-      <h6 class="text-5xl font-bold">0</h6>
-      <p class="font-medium tracking-widest uppercase text-base">
-        Devices exploded
-      </p>
+
+    <div class="stat">
+      <div class="stat-title">Images uploaded</div>
+      <div class="stat-value">TBD</div> <%# todo: hookup %>
+      <div class="stat-figure tooltip tooltip-left lg:tooltip-right" data-tip="How often images have been replaced"><%- include('./partials/icons/camera') %></div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-title">Notes saved</div>
+      <div class="stat-value">TBD</div> <%# todo: hookup %>
+      <div class="stat-figure tooltip tooltip-left" data-tip="How often notes have been overwritten"><%- include('./partials/icons/pencil-square') %></div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-title">Devices exploded</div>
+      <div class="stat-value">0</div>
+      <div class="stat-figure tooltip tooltip-left" data-tip="How many devices have exploded ... in the last 3 minutes"><%- include('./partials/icons/arrows-pointing-out') %></div>
     </div>
   </div>
 </div>
+
+
 
 <script>
   //fetch /stats_api/now as json and replace the numbers above
