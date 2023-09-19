@@ -97,7 +97,7 @@ module.exports = (io, cacheLogins) => {
 						console.log(`INFO: Intercepted message from ${yoyo}. Hue: ${data.data.hue}`);
 						intercept = true;
 						// if data.data.hue is in 10% range of cacheLogin.hue, set cacheLogin.returned to true
-						if (data.data.hue >= cacheLogin.hue * 0.9 && data.data.hue <= cacheLogin.hue * 1.1) {
+						if (data.data.hue >= cacheLogin.hue - 15 && data.data.hue <= cacheLogin.hue + 15) {
 							cacheLogin.returned = true;
 							console.log("INFO: Hue is in range, setting returned to true.");
 						} else {
