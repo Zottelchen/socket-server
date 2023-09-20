@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const http = require("http");
 const path = require("path");
@@ -6,7 +7,7 @@ const mcache = require("memory-cache");
 const { findSocketUuid, sendLight, getNote } = require("./device-functions");
 const { encrypt, decrypt, getKeyFromPassword, getSalt, getRandomUUID } = require("./crypto-functions");
 
-// const User = require("./models/user");
+if (process.env.WEB_LOGGING === "true") {
 
 if (process.env.LOGGING === "true") {
 	const chalk = require("chalk");
@@ -65,7 +66,7 @@ const cache = (duration) => {
 };
 
 // Setup logging if enabled
-if (process.env.LOGGING === "true") {
+if (process.env.WEB_LOGGING === "true") {
 	app.use(
 		morgan(
 			`🍄M ➡ ${chalk.gray("[:date[clf]]")} "${chalk.green(":method")} ${chalk.blue(":url")} HTTP/:http-version" ${chalk.gray(":remote-addr")}   ${chalk.yellow(
