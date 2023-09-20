@@ -13,7 +13,7 @@
 
   <%# Image & Notes %>
   <div class="flex flex-row gap-2">
-    <img src="<%= image %>" alt="Yo-Yo Image" class="rounded-xl w-1/2">
+    <img src="<%= image %>" alt="Yo-Yo Image" class="rounded-xl w-1/2" id="photo">
     <textarea class="textarea textarea-bordered w-1/2" placeholder="You can write notes about your Yo-Yo machine here! For example you can write down, which color means what to you."></textarea>
   </div>
 
@@ -60,8 +60,12 @@
       <form method="dialog">
         <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
       </form>
-      <h3 class="font-bold text-lg">Hello!</h3>
-      <p class="py-4">Press ESC key or click on ✕ button to close</p>
+      <h3 class="font-bold text-lg">Image Upload</h3>
+      <p class="py-4">Please select an image you would like to upload. (Allowed filetypes: jpg, png, gif, webp)</p>
+      <form id="form_image" enctype="multipart/form-data">
+        <input type="file" name="image" id="input_image" class="file-input file-input-bordered w-full max-w-xs" />
+        <button type="button" id="btn_image" class="btn btn-sm btn-primary mt-2" onclick="uploadImage();">Upload</button>
+      </form>
     </div>
   </dialog>
 
@@ -73,6 +77,10 @@
     <div class="alert alert-success hidden" id="msgsuc">
       <%- include('./partials/icons/light-bulb') %>
       <span>Light sent successfully.</span>
+    </div>
+    <div class="alert alert-success hidden" id="imgsuc">
+      <%- include('./partials/icons/camera') %>
+      <span>Image uploaded successfully.</span>
     </div>
   </div>
 
@@ -96,6 +104,35 @@
       }
     });
 
+    //image upload
+    function uploadImage() {
+      document.querySelector("#btn_image").classList.add("loading", "loading-spinner", "loading-md");
+      const formData = new FormData(document.getElementById('form_image'));
+      fetch('/device-upload?token=<%=token%>', {
+          method: 'POST',
+          body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            document.querySelector("#photo").src = data.image;
+            document.querySelector("#imgsuc").classList.remove("hidden");
+            setTimeout(() => {
+              document.querySelector("#imgsuc").classList.add("hidden");
+            }, 3000);
+            imageUpload.close();
+            document.querySelector("#btn_image").classList.remove("loading", "loading-spinner", "loading-md");
+          } else {
+            document.querySelector("#msgfail").children[1].innerHTML = "Uploading image failed: " + data.error;
+            document.querySelector("#msgfail").classList.remove("hidden");
+            setTimeout(() => {
+              document.querySelector("#msgfail").classList.add("hidden");
+            }, 3000);
+            document.querySelector("#btn_image").classList.remove("loading", "loading-spinner", "loading-md");
+          }
+        })
+    }
+
     //light button
     function sendLight(hue) {
       if (hue === "yes") {
@@ -118,6 +155,10 @@
           }
         });
     }
+
+    // edit name button TODO
+
+    // save note button TODO
 
     //copy to clipboard button
     const copy = `<%- include("./partials/icons/clipboard-copy") %>`;

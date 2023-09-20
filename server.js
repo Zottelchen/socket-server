@@ -4,9 +4,11 @@ const http = require("http");
 const path = require("path");
 const mongoose = require("mongoose");
 const mcache = require("memory-cache");
+const multer = require("multer");
+const upload = multer({});
 //
 const logger = require("./logger");
-const { findSocketUuid, sendLight, getNote, getYoyoByUid } = require("./device-functions");
+const { findSocketUuid, sendLight, getNote, getYoyoByUid, updateNote } = require("./device-functions");
 const { encrypt, getKeyFromPassword, getSalt, getRandomUUID, yoyoFromToken } = require("./crypto-functions");
 
 const SECRET_KEY = process.env.SECRET_KEY || "secret";
@@ -174,6 +176,25 @@ app.get("/device-check", function (req, res) {
 	} else {
 		res.json({ success: false, error: "No session found.", url: "/device?session_missing" });
 	}
+});
+
+app.post("/device-upload", upload.single("image"), function (req, res) {
+	if (!req.query.token) {
+		return res.status(400).json({ success: false, error: "No token provided" });
+	}
+	const yoyo = yoyoFromToken(req.query.token);
+	if (!req.file) {
+		return res.status(400).json({ success: false, error: "No file uploaded" });
+	}
+	const allowedFileTypes = [".jpg", ".jpeg", ".png", ".gif", ".webp"];
+	const extension = path.extname(req.file.originalname).toLowerCase();
+	const mimetype = req.file.mimetype;
+	if (!allowedFileTypes.includes(extension) || !mimetype.startsWith("image/")) {
+		return res.status(400).json({ success: false, error: "File type not allowed" });
+	}
+	const encoded = `data:${mimetype};base64,${req.file.buffer.toString("base64")}`;
+	updateNote(yoyo, "image", encoded);
+	res.json({ success: true, error: false, image: encoded });
 });
 
 app.get("/device-control", function (req, res) {

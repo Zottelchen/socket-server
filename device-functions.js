@@ -73,4 +73,16 @@ async function getNote(yoyo_number) {
 	return note || createNote(yoyo_number);
 }
 
-module.exports = { findSocketUuid, sendLight, getYoyoBySocketUUid, getNote, getYoyoByUid, getYoyoBySocketUuidOrUid };
+async function updateNote(yoyo_number, field, value) {
+	getNote(yoyo_number).then((note) => {
+		note[field] = value;
+		note.save((err, data) => {
+			if (err) {
+				logger.error("Could not save note.");
+				logger.error(err);
+			}
+		});
+	});
+}
+
+module.exports = { findSocketUuid, sendLight, getYoyoBySocketUUid, getNote, getYoyoByUid, getYoyoBySocketUuidOrUid, updateNote };
