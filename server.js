@@ -4,32 +4,29 @@ const http = require("http");
 const path = require("path");
 const mongoose = require("mongoose");
 const mcache = require("memory-cache");
+//
+const logger = require("./logger");
 const { findSocketUuid, sendLight, getNote, getYoyoByUid } = require("./device-functions");
 const { encrypt, decrypt, getKeyFromPassword, getSalt, getRandomUUID } = require("./crypto-functions");
-
-if (process.env.WEB_LOGGING === "true") {
-	const chalk = require("chalk");
-	const morgan = require("morgan");
-}
 
 // Connect to DB
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/node-testing", { useNewUrlParser: true, useUnifiedTopology: true }, (err, res) => {
 	if (err) {
-		console.error(`ERROR: Error connecting to the database. ${err}`);
+		logger.error(`Error connecting to the database. ${err}`);
 	} else {
-		console.info("INFO: Connected to Database!");
+		logger.info("Connected to Database!");
 		if (process.env.CLEAR_SOCKETS === "true") {
 			const User = require("./models/user");
-			console.log("INFO: Wiping all socketUuids...");
+			logger.warn("Wiping all socketUuids...");
 			User.find({}, (_err, _res) => {
 				_res.forEach((user) => {
 					user.socketUuid = null;
 					user.save((__err, data) => {
-						console.log(`INFO: Wiped socketUuid of ${data.macAddress}.`);
+						logger.info(`Wiped socketUuid of ${data.macAddress}.`);
 					});
 				});
 			});
-			console.log("INFO: Wiped socketUuids");
+			logger.info("Wiped socketUuids");
 		}
 	}
 });
@@ -37,6 +34,13 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/node-testing", 
 // Create HTTP server
 const app = express();
 const server = http.createServer(app);
+
+// Setup logging if enabled
+if (process.env.WEB_LOGGING === "true") {
+	const pinohttp = require("pino-http")();
+	app.use(pinohttp);
+	logger.warn("Web logging enabled. Use only for debugging.");
+}
 
 // Setup View engine
 app.set("view engine", "ejs");
@@ -63,18 +67,6 @@ const cache = (duration) => {
 		}
 	};
 };
-
-// Setup logging if enabled
-if (process.env.WEB_LOGGING === "true") {
-	app.use(
-		morgan(
-			`🍄M ➡ ${chalk.gray("[:date[clf]]")} "${chalk.green(":method")} ${chalk.blue(":url")} HTTP/:http-version" ${chalk.gray(":remote-addr")}   ${chalk.yellow(
-				":status",
-			)} :res[content-length] ":referrer" ${chalk.gray('":user-agent"')}`,
-		),
-	);
-	console.info("Morgan logging enabled.");
-}
 
 // Setup static files
 app.use(express.static(path.join(__dirname, "public")));
@@ -133,7 +125,7 @@ app.post("/device", function (req, res) {
 	findSocketUuid(req.body.yymn).then((socketUuid) => {
 		// If the Yo-Yo Number is not in the database
 		if (socketUuid === null) {
-			res.render("device", { error: "Yo-Yo Number not found. Please enter a valid Yo-Yo Number." });
+			res.render("device", { error: "Yo-Yo Number not found. Please enter a valid Yo-Yo Number." }); //TODO: Yoyo number not online
 			return;
 		}
 
@@ -165,7 +157,7 @@ app.post("/device", function (req, res) {
 
 const SECRET_KEY = process.env.SECRET_KEY || "secret";
 if (SECRET_KEY === "secret") {
-	console.warn("WARNING: Environment SECRET_KEY not set.");
+	logger.warn("Environment SECRET_KEY not set.");
 }
 
 app.get("/device-check", function (req, res) {
@@ -220,7 +212,6 @@ app.get("/device-control", function (req, res) {
 // Error handling
 /// Handle 500
 app.use((err, req, res, next) => {
-	console.error(err.stack);
 	res.status(500).render("error", {
 		pageTitle: "Error 500 - Server goofed.",
 		errorMessage: "Something broke :(",
@@ -250,7 +241,7 @@ app.use((req, res) => {
 server.start = () => {
 	const PORT = process.env.PORT || 5000;
 	server.listen(PORT, () => {
-		console.info(`INFO: Server started on port ${PORT}.`);
+		logger.info(`INFO: Server started on port ${PORT}.`);
 	});
 };
 
