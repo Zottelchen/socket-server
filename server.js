@@ -185,7 +185,7 @@ app.get("/device-control", function (req, res) {
 		// Check if Yoyo is in database
 		findSocketUuid(yoyo).then((socketUuid) => {
 			if (socketUuid === null) {
-				res.render("device", { error: "Yo-Yo Number not found. Please enter a valid Yo-Yo Number." });
+				res.render("device", { error: "Yo-Yo Number not found. Is the device online?" });
 				return;
 			}
 
@@ -206,6 +206,48 @@ app.get("/device-control", function (req, res) {
 		});
 	} else {
 		res.render("device", { error: "We could not find a Yo-Yo with that key. Please enter a valid Yo-Yo Number and try to login again." });
+	}
+});
+
+app.get("/device-light", function (req, res) {
+	const id = req.query.id;
+	let hue = req.query.hue;
+	if (hue !== "rainbow") {
+		hue = Number(hue);
+	}
+	if (id) {
+		getYoyoByUid("send", id).then((yoyo) => {
+			if (yoyo === null) {
+				res.send({ success: false, error: "Yo-Yo Number not found. Please enter a valid Yo-Yo Number. Device could also be disconnected." });
+				return;
+			}
+			findSocketUuid(yoyo).then((socketUuid) => {
+				if (socketUuid === null) {
+					res.send({ success: false, error: "Socket not found. Is the device online?" });
+					return;
+				}
+
+				if (hue === "rainbow") {
+					// for values 0 - 255 send light
+					for (let i = 0; i < 256; i++) {
+						setTimeout(() => {
+							sendLight(socketUuid, i, io);
+						}, i * 5);
+					}
+					res.send({ success: true, error: false });
+				} else {
+					if (!hue) {
+						hue = Math.floor(Math.random() * 256);
+					}
+					if (hue < 0 || hue > 255) {
+						res.send({ success: false, error: "Hue must be between 0 and 255. Alternatively, remove the hue-query for a random color." });
+						return;
+					}
+					sendLight(socketUuid, hue, io);
+					res.send({ success: true, error: false });
+				}
+			});
+		});
 	}
 });
 

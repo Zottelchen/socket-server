@@ -9,6 +9,7 @@
     <input value="<%= yoyo %>" disabled class="hidden">
     <button type="copy" class="hover:text-water-leaf-100 tooltip-open" data-tip="Copied!"><%- include('./partials/icons/clipboard-copy') %></button>
   </div>
+  <%# maybe todo: add target selection %>
 
   <%# Image & Notes %>
   <div class="flex flex-row gap-2">
@@ -18,13 +19,13 @@
 
   <%# Buttons %>
   <div class="flex flex-row gap-2">
-    <button type="light" class="btn font-semibold text-white bg-yellow-600 hover:bg-yellow-400 focus:bg-yellow-400"><%- include('./partials/icons/light-bulb') %> Send Light</button>
-    <button type="rainbow" class="btn font-semibold text-white bg-red-600 hover:bg-yellow-400 focus:bg-green-400" onclick="this.blur();"><%- include('./partials/icons/star') %> Send Rainbow</button>
+    <button type="light" class="btn font-semibold text-white bg-yellow-600 hover:bg-yellow-400 focus:bg-yellow-400" onclick="this.blur(); sendLight('yes')"><%- include('./partials/icons/light-bulb') %> Send Light</button>
+    <button type="rainbow" class="btn font-semibold text-white bg-red-600 hover:bg-yellow-400 focus:bg-green-400" onclick="this.blur(); sendLight('rainbow')"><%- include('./partials/icons/star') %> Send Rainbow</button>
     <div class="border-r border-water-leaf-900 gap-4"></div>
-    <button type="saveImage" class="btn font-semibold text-white bg-cyan-600 hover:bg-cyan-400 focus:bg-cyan-400" onclick="imageUpload.showModal()"><%- include('./partials/icons/camera') %> Upload new Image</button>
-    <button type="saveNote" class="btn font-semibold text-white bg-cyan-600 hover:bg-cyan-400 focus:bg-cyan-400"><%- include('./partials/icons/check') %> Save Note</button>
+    <button type="saveImage" class="btn font-semibold text-white bg-cyan-600 hover:bg-cyan-400 focus:bg-cyan-400" onclick="this.blur(); imageUpload.showModal()"><%- include('./partials/icons/camera') %> Upload new Image</button>
+    <button type="saveNote" class="btn font-semibold text-white bg-cyan-600 hover:bg-cyan-400 focus:bg-cyan-400" onclick="this.blur()"><%- include('./partials/icons/check') %> Save Note</button>
     <div class="border-r border-water-leaf-900 gap-4"></div>
-    <button type="showLinks" class="btn font-semibold text-white bg-water-leaf-600 hover:bg-water-leaf-400 focus:bg-water-leaf-400"><%- include('./partials/icons/eye') %> Show Links</button>
+    <button type="showLinks" class="btn font-semibold text-white bg-water-leaf-600 hover:bg-water-leaf-400 focus:bg-water-leaf-400" onclick="this.blur()"><%- include('./partials/icons/eye') %> Show Links</button>
   </div>
 
   <%# LINKS, default hidden %>
@@ -64,6 +65,16 @@
     </div>
   </dialog>
 
+  <div class="toast toast-top toast-center">
+    <div class="alert alert-error hidden" id="msgfail">
+      <%- include('./partials/icons/question-mark-circle') %>
+      <span>Sending light failed: </span>
+    </div>
+    <div class="alert alert-success hidden" id="msgsuc">
+      <%- include('./partials/icons/light-bulb') %>
+      <span>Light sent successfully.</span>
+    </div>
+  </div>
 
   <script>
     //toggle visibility of links
@@ -84,6 +95,29 @@
         });
       }
     });
+
+    //light button
+    function sendLight(hue) {
+      if (hue === "yes") {
+        hue = Math.floor(Math.random() * 256);
+      }
+      fetch("/device-light?id=<%= token_send %>&hue=" + hue)
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            document.querySelector("#msgsuc").classList.remove("hidden");
+            setTimeout(() => {
+              document.querySelector("#msgsuc").classList.add("hidden");
+            }, 3000);
+          } else {
+            document.querySelector("#msgfail").children[1].innerHTML = "Sending light failed: " + data.error;
+            document.querySelector("#msgfail").classList.remove("hidden");
+            setTimeout(() => {
+              document.querySelector("#msgfail").classList.add("hidden");
+            }, 3000);
+          }
+        });
+    }
 
     //copy to clipboard button
     const copy = `<%- include("./partials/icons/clipboard-copy") %>`;
