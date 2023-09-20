@@ -27,7 +27,7 @@ async function getYoyoBySocketUuidOrUid(uidtype, identifier) {
 			throw new Error("Invalid uidtype");
 		}
 	} catch (error) {
-		logger.error("Error:", error);
+		logger.error("Lookup-Error:", error);
 		return null;
 	}
 }

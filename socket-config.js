@@ -90,6 +90,9 @@ module.exports = (io, cacheLogins) => {
 			if (cacheLogins) {
 				getYoyoBySocketUUid(socket.id).then((yoyo) => {
 					const cacheLogin = cacheLogins.find((login) => login.yoyo === yoyo);
+					if (!cacheLogin) {
+						return;
+					}
 					if (cacheLogin.returned) {
 						return;
 					}
