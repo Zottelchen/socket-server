@@ -232,7 +232,7 @@ app.get("/device-light", function (req, res) {
 					for (let i = 0; i < 256; i++) {
 						setTimeout(() => {
 							sendLight(socketUuid, i, io);
-						}, i * 5);
+						}, i * 25);
 					}
 					res.send({ success: true, error: false });
 				} else {
