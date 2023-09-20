@@ -167,12 +167,12 @@ app.get("/device-check", function (req, res) {
 			const salt = getSalt();
 			const key = getKeyFromPassword(SECRET_KEY, salt);
 			const token = `${salt.toString("hex")}$${encrypt(cacheLogin.yoyo, key).toString("hex")}`;
-			res.send({ success: true, error: false, url: `/device-control?token=${token}` });
+			res.json({ success: true, error: false, url: `/device-control?token=${token}` });
 		} else {
-			res.send({ success: false, error: false, url: false });
+			res.json({ success: false, error: false, url: false });
 		}
 	} else {
-		res.send({ success: false, error: "No session found.", url: "/device?session_missing" });
+		res.json({ success: false, error: "No session found.", url: "/device?session_missing" });
 	}
 });
 
@@ -195,7 +195,7 @@ app.get("/device-control", function (req, res) {
 					note: note.note,
 					token_view: note.token_view,
 					token_send: note.token_send,
-					token_connect: note.token_connect,
+					//token_connect: note.token_connect,
 					image: note.image,
 					host: `${req.protocol}://${req.headers.host}`,
 				});
@@ -251,6 +251,7 @@ app.get("/device-light", function (req, res) {
 // Error handling
 /// Handle 500
 app.use((err, req, res, next) => {
+	logger.error("Error 500:", err.stack);
 	res.status(500).render("error", {
 		pageTitle: "Error 500 - Server goofed.",
 		errorMessage: "Something broke :(",
@@ -259,6 +260,7 @@ app.use((err, req, res, next) => {
 	});
 });
 app.get("/500", function (req, res) {
+	logger.error("Fake-Error 500");
 	res.status(500).render("error", {
 		pageTitle: "Error 500 - Server goofed.",
 		errorMessage: "Something broke :(",
@@ -268,6 +270,7 @@ app.get("/500", function (req, res) {
 });
 /// Handle 404
 app.use((req, res) => {
+	logger.error("Error 404:", err.stack);
 	res.status(404).render("error", {
 		pageTitle: "Error 404 - Page Not Found",
 		errorMessage: "Page not found. :/",
