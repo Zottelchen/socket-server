@@ -51,17 +51,6 @@
         <button type="copy" class="hover:text-water-leaf-100 tooltip-open" data-tip="Copied!"><%- include('./partials/icons/clipboard-copy') %></button>
       </div>
     </div>
-    <div class="flex flex-col gap-2 px-2">
-      <label class="py-2 font-semibold" for="connect-token">Connect token
-        <span class="tooltip" data-tip="If you want other Yo-Yo machines to send a light to this one, you need to use this connect token.">
-          <%- include('./partials/icons/information-circle') %>
-        </span>
-      </label>
-      <div class="flex flex-row items-center gap-2">
-        <input type="text" id="connect-token" class="input input-bordered w-full input-sm bg-gray-200" value="<%= token_connect %>" readonly>
-        <button type="copy" class="hover:text-water-leaf-100 tooltip-open" data-tip="Copied!"><%- include('./partials/icons/clipboard-copy') %></button>
-      </div>
-    </div>
   </div>
 
   <%# TODO: make the buttons do something %>

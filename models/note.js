@@ -7,7 +7,7 @@ const noteSchema = new Schema({
 	note: String,
 	token_view: String,
 	token_send: String,
-	token_connect: String,
+	//token_connect: String,
 	image: String, //base64 encoded or path to placeholder
 });
 

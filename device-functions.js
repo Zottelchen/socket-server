@@ -38,7 +38,7 @@ async function createNote(yoyo_number) {
 		note: "",
 		token_view: getRandomUUID() + getRandomUUID(),
 		token_send: getRandomUUID() + getRandomUUID(),
-		token_connect: getRandomUUID() + getRandomUUID(),
+		//token_connect: getRandomUUID() + getRandomUUID(),
 		image: "/img/placeholder.jpg",
 	});
 	newNote.save((err, data) => {
