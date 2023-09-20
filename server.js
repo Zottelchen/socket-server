@@ -20,18 +20,20 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/node-testing", 
 		console.error(`ERROR: Error connecting to the database. ${err}`);
 	} else {
 		console.info("INFO: Connected to Database!");
-		/*
-      console.log('INFO: Wiping all socketUuids...');
-      User.find({}, (_err, _res) => {
-        _res.forEach(user => {
-          user.socketUuid = null;
-          user.save((__err, data) => {
-            console.log(`INFO: Wiped socketUuid of ${data.macAddress}.`);
-          });
+		if (process.env.CLEAR_SOCKETS === "true") {
+			const User = require("./models/user");
+			console.log("INFO: Wiping all socketUuids...");
+			User.find({}, (_err, _res) => {
+				_res.forEach((user) => {
+					user.socketUuid = null;
+					user.save((__err, data) => {
+						console.log(`INFO: Wiped socketUuid of ${data.macAddress}.`);
+					});
         })
-      });
-      console.log('INFO: Wiped socketUuids');
-      */
+				});
+			});
+			console.log("INFO: Wiped socketUuids");
+		}
 	}
 });
 
