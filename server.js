@@ -7,7 +7,12 @@ const mcache = require("memory-cache");
 //
 const logger = require("./logger");
 const { findSocketUuid, sendLight, getNote, getYoyoByUid } = require("./device-functions");
-const { encrypt, decrypt, getKeyFromPassword, getSalt, getRandomUUID } = require("./crypto-functions");
+const { encrypt, getKeyFromPassword, getSalt, getRandomUUID, yoyoFromToken } = require("./crypto-functions");
+
+const SECRET_KEY = process.env.SECRET_KEY || "secret";
+if (SECRET_KEY === "secret") {
+	logger.warn("Environment SECRET_KEY not set.");
+}
 
 // Connect to DB
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/node-testing", { useNewUrlParser: true, useUnifiedTopology: true }, (err, res) => {
@@ -155,11 +160,6 @@ app.post("/device", function (req, res) {
 	});
 });
 
-const SECRET_KEY = process.env.SECRET_KEY || "secret";
-if (SECRET_KEY === "secret") {
-	logger.warn("Environment SECRET_KEY not set.");
-}
-
 app.get("/device-check", function (req, res) {
 	const cacheLogin = cacheLogins.find((login) => login.session_uuid === req.query.session_uuid);
 	if (cacheLogin) {
@@ -177,10 +177,7 @@ app.get("/device-check", function (req, res) {
 });
 
 app.get("/device-control", function (req, res) {
-	const salt = req.query.token.split("$")[0];
-	const key = getKeyFromPassword(SECRET_KEY, Buffer.from(salt, "hex"));
-	const encrypted = Buffer.from(req.query.token.split("$")[1], "hex");
-	const yoyo = decrypt(encrypted, key);
+	const yoyo = yoyoFromToken(req.query.token);
 	if (yoyo) {
 		// Check if Yoyo is in database
 		findSocketUuid(yoyo).then((socketUuid) => {

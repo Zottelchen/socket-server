@@ -2,6 +2,8 @@
 
 const crypto = require("crypto");
 
+const SECRET_KEY = process.env.SECRET_KEY || "secret";
+
 const ALGORITHM = {
 	/**
 	 * GCM is an authenticated encryption mode that
@@ -100,4 +102,11 @@ function getRandomUUID() {
 	return crypto.randomUUID();
 }
 
-module.exports = { encrypt, decrypt, getRandomKey, getSalt, getKeyFromPassword, getRandomUUID };
+function yoyoFromToken(token) {
+	const salt = token.split("$")[0];
+	const key = getKeyFromPassword(SECRET_KEY, Buffer.from(salt, "hex"));
+	const encrypted = Buffer.from(token.split("$")[1], "hex");
+	return decrypt(encrypted, key);
+}
+
+module.exports = { encrypt, decrypt, getRandomKey, getSalt, getKeyFromPassword, getRandomUUID, yoyoFromToken };
