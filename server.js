@@ -4,12 +4,10 @@ const http = require("http");
 const path = require("path");
 const mongoose = require("mongoose");
 const mcache = require("memory-cache");
-const { findSocketUuid, sendLight, getNote } = require("./device-functions");
+const { findSocketUuid, sendLight, getNote, getYoyoByUid } = require("./device-functions");
 const { encrypt, decrypt, getKeyFromPassword, getSalt, getRandomUUID } = require("./crypto-functions");
 
 if (process.env.WEB_LOGGING === "true") {
-
-if (process.env.LOGGING === "true") {
 	const chalk = require("chalk");
 	const morgan = require("morgan");
 }
@@ -29,7 +27,6 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/node-testing", 
 					user.save((__err, data) => {
 						console.log(`INFO: Wiped socketUuid of ${data.macAddress}.`);
 					});
-        })
 				});
 			});
 			console.log("INFO: Wiped socketUuids");

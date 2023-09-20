@@ -1,7 +1,7 @@
 const User = require("./models/user");
 const Message = require("./models/message");
 const { addToStat } = require("./stat-functions");
-const { findYoyo } = require("./device-functions");
+const { getYoyoBySocketUUid } = require("./device-functions");
 
 module.exports = (io, cacheLogins) => {
 	const sendCachedMessage = (user) => {
@@ -88,7 +88,7 @@ module.exports = (io, cacheLogins) => {
 			// Intercept message if data.macAdress in loginCache
 			let intercept = false;
 			if (cacheLogins) {
-				findYoyo(socket.id).then((yoyo) => {
+				getYoyoBySocketUUid(socket.id).then((yoyo) => {
 					const cacheLogin = cacheLogins.find((login) => login.yoyo === yoyo);
 					if (cacheLogin.returned) {
 						return;

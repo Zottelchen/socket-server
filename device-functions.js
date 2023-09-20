@@ -1,16 +1,33 @@
 const User = require("./models/user");
 const Note = require("./models/note");
+const { addToStat } = require("./stat-functions");
 const { getRandomUUID } = require("./crypto-functions");
-const { get } = require("mongoose");
 
-async function findYoyo(socketUuid) {
-	console.log(`INFO: Searching for YoYoNumber of ${socketUuid}`);
+async function getYoyoBySocketUUid(socketUuid) {
+	return getYoyoBySocketUuidOrUid("socketUuid", socketUuid);
+}
+
+async function getYoyoByUid(uidtype, uid) {
+	return getYoyoBySocketUuidOrUid(uidtype, uid);
+}
+
+async function getYoyoBySocketUuidOrUid(uidtype, identifier) {
 	try {
-		const user = await User.findOne({ socketUuid }).exec();
-		console.log(`INFO: Found socketUuid of ${socketUuid}: ${user.macAddress}`);
-		return user ? user.macAddress : null;
+		console.log(`INFO: Searching for YoYoNumber of ${uidtype}-${identifier}`);
+		if (uidtype === "socketUuid") {
+			const user = await User.findOne({ socketUuid: identifier }).exec();
+			console.log(`INFO: Found socketUuid of ${identifier}: ${user.macAddress}`);
+			return user ? user.macAddress : null;
+		} else if (uidtype === "send" || uidtype === "view") {
+			const queryField = uidtype === "send" ? "token_send" : "token_view";
+			const note = await Note.findOne({ [queryField]: identifier }).exec();
+			return note ? note.yoyo : null;
+		} else {
+			throw new Error("Invalid uidtype");
+		}
 	} catch (error) {
 		console.error("Error:", error);
+		return null;
 	}
 }
 
@@ -51,12 +68,8 @@ async function createNote(yoyo_number) {
 }
 
 async function getNote(yoyo_number) {
-	const note = await Note.findOne({ yoyo: `${yoyo_number}` }).exec();
-	if (note) {
-		return note;
-	} else {
-		return createNote(yoyo_number);
-	}
+	const note = await Note.findOne({ yoyo: yoyo_number }).exec();
+	return note || createNote(yoyo_number);
 }
 
-module.exports = { findSocketUuid, sendLight, findYoyo, getNote };
+module.exports = { findSocketUuid, sendLight, getYoyoBySocketUUid, getNote, getYoyoByUid, getYoyoBySocketUuidOrUid };
