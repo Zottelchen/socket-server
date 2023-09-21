@@ -104,7 +104,7 @@ module.exports = (io, cacheLogins) => {
 							cacheLogin.returned = true;
 							logger.info("Hue is in range, setting returned to true.");
 						} else {
-							logger.info("Hue is not in range: ", data.data.hue, cacheLogin.hue);
+							logger.info(`Hue is not in range: ${data.data.hue}|${cacheLogin.hue}(${cacheLogin.hue - 15}-${cacheLogin.hue + 15})`);
 						}
 					}
 

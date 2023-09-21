@@ -296,8 +296,7 @@ app.get("/device/light", function (req, res) {
 // Error handling
 /// Handle 500
 app.use((err, req, res, next) => {
-	logger.error("Error 500:", req.url, err, err.stack);
-	console.error(err);
+	logger.error(`Error 500: ${req.url}: ${err}\n${err.stack}`);
 	res.status(500).render("error", {
 		pageTitle: "Error 500 - Server goofed.",
 		errorMessage: "Something broke :(",
@@ -316,7 +315,7 @@ app.get("/500", function (req, res) {
 });
 /// Handle 404
 app.use((req, res) => {
-	logger.warn("Error 404:", req.url);
+	logger.warn(`Error 404: ${req.url}`);
 	res.status(404).render("error", {
 		pageTitle: "Error 404 - Page Not Found",
 		errorMessage: "Page not found. :/",
