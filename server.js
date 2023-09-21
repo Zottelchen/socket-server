@@ -198,7 +198,26 @@ app.post("/device/upload", upload.single("image"), function (req, res) {
 	return res.json({ success: true, error: false, image: encoded });
 });
 
-app.get("/device-control", function (req, res) {
+app.post("/device/update", function (req, res) {
+	if (!req.query.token) {
+		return res.status(400).json({ success: false, error: "No token provided" });
+	}
+	if (!req.query.field) {
+		return res.status(400).json({ success: false, error: "No field provided" });
+	}
+	if (!req.body.value) {
+		return res.status(400).json({ success: false, error: "No value provided" });
+	}
+	const yoyo = yoyoFromToken(req.query.token);
+	if (req.query.field === "name" || req.query.field === "note") {
+		updateNote(yoyo, req.query.field, req.body.value);
+		return res.json({ success: true, error: false, field: req.query.field, value: req.body.value });
+	} else {
+		return res.status(400).json({ success: false, error: "Field not allowed" });
+	}
+});
+
+app.get("/device/control", function (req, res) {
 	const yoyo = yoyoFromToken(req.query.token);
 	if (yoyo) {
 		// Check if Yoyo is in database
@@ -228,7 +247,10 @@ app.get("/device-control", function (req, res) {
 	}
 });
 
-app.get("/device-light", function (req, res) {
+app.get("/device/view", function (req, res) {
+	// TODO
+});
+
 app.get("/device/light", function (req, res) {
 	const id = req.query.id;
 	let hue = req.query.hue;

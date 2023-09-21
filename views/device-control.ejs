@@ -2,7 +2,11 @@
 <%- include('./partials/javascript-required') %>
 <p>Here you can edit the image, the notes and send links to your Yo-Yo machine. Additionally you can create links to send lights or share this page as read-only. We recommend to bookmark this page, so you won't have to login again.</p>
 <div id="main" class="flex flex-col gap-5 space-y-1 bg-water-leaf-200 rounded-xl p-5 dark:bg-water-leaf-800">
-  <h2 class="text-3xl"><%= name %> <button type="editName" class="hover:text-water-leaf-100"><%- include('./partials/icons/pencil-square') %></button></h2>
+  <%# Name %>
+  <div class="static flex items-center">
+    <h2 class="text-3xl static inline"><%= name %></h2>
+    <button type="editName" class="hover:text-water-leaf-100 inline-block pl-2" onclick="activateName()"><%- include('./partials/icons/pencil-square') %></button>
+  </div>
 
   <%# Device Info %>
   <div class="text-1xl">Yo-Yo Number: <%= yoyo %>
@@ -32,12 +36,12 @@
   <div id="links" class="flex flex-col gap-2 hidden">
     <div class="flex flex-col gap-2 px-2">
       <label class="py-2 font-semibold" for="light-link">Light-Link
-        <span class="tooltip" data-tip="With this link you can send a light directly to your Yo-Yo machine. You can also append a hue like '&hue=127'. Values from 0 to 255 are possible.">
+        <span class="tooltip" data-tip="With this link you can send a light directly to your Yo-Yo machine. You can also append a hue like '&hue=127'. Values from 0 to 255 are possible. You can also use '&hue=rainbow'.">
           <%- include('./partials/icons/information-circle') %>
         </span>
       </label>
       <div class="flex flex-row items-center gap-2">
-        <input type="text" id="light-link" class="input input-bordered w-full input-sm bg-gray-200" value="<%= host %>/device-light?id=<%= token_send %>" readonly>
+        <input type="text" id="light-link" class="input input-bordered w-full input-sm bg-gray-200 dark:bg-gray-600" value="<%= host %>/device/light?id=<%= token_send %>" readonly>
         <button type="copy" class="hover:text-water-leaf-100 tooltip-open" data-tip="Copied!"><%- include('./partials/icons/clipboard-copy') %></button>
       </div>
     </div>
@@ -48,7 +52,7 @@
         </span>
       </label>
       <div class="flex flex-row items-center gap-2">
-        <input type="text" id="view-link" class="input input-bordered w-full input-sm bg-gray-200" value="<%= host %>/device-view?id=<%= token_view %>" readonly>
+        <input type="text" id="view-link" class="input input-bordered w-full input-sm bg-gray-200 dark:bg-gray-600" value="<%= host %>/device/view?id=<%= token_view %>" readonly>
         <button type="copy" class="hover:text-water-leaf-100 tooltip-open" data-tip="Copied!"><%- include('./partials/icons/clipboard-copy') %></button>
       </div>
     </div>
@@ -82,6 +86,14 @@
       <%- include('./partials/icons/camera') %>
       <span>Image uploaded successfully.</span>
     </div>
+    <div class="alert alert-success hidden" id="notesuc">
+      <%- include('./partials/icons/check') %>
+      <span>Note saved successfully.</span>
+    </div>
+    <div class="alert alert-success hidden" id="namesuc">
+      <%- include('./partials/icons/pencil-square') %>
+      <span>Name saved successfully.</span>
+    </div>
   </div>
 
   <script>
@@ -108,7 +120,7 @@
     function uploadImage() {
       document.querySelector("#btn_image").classList.add("loading", "loading-spinner", "loading-md");
       const formData = new FormData(document.getElementById('form_image'));
-      fetch('/device-upload?token=<%=token%>', {
+      fetch('/device/upload?token=<%=token%>', {
           method: 'POST',
           body: formData,
         })
@@ -138,7 +150,7 @@
       if (hue === "yes") {
         hue = Math.floor(Math.random() * 256);
       }
-      fetch("/device-light?id=<%= token_send %>&hue=" + hue)
+      fetch("/device/light?id=<%= token_send %>&hue=" + hue)
         .then(response => response.json())
         .then(data => {
           if (data.success) {
@@ -156,9 +168,64 @@
         });
     }
 
-    // edit name button TODO
+    // edit name button
+    let original_name = document.querySelector("h2").innerHTML;
+
+    function activateName() {
+      const name = document.querySelector("h2").innerHTML;
+      document.querySelector("h2").innerHTML = `<input type="text" class="input input-bordered" size="${Math.max(30, name.length)}" value="${name}">`;
+      document.querySelector("button[type='editName']").innerHTML = `<%- include('./partials/icons/check') %>`;
+      document.querySelector("button[type='editName']").setAttribute("onclick", "saveName();");
+    }
+
+    function saveName() {
+      const name = document.querySelector("h2 input").value;
+      fetch('/device/update?token=<%=token%>&field=name', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            value: name
+          }),
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            document.querySelector("h2").innerHTML = name;
+            document.querySelector("#namesuc").classList.remove("hidden");
+            setTimeout(() => {
+              document.querySelector("#namesuc").classList.add("hidden");
+            }, 3000);
+            document.querySelector("button[type='editName']").innerHTML = `<%- include('./partials/icons/pencil-square') %>`;
+            document.querySelector("button[type='editName']").setAttribute("onclick", "activateName();");
+            original_name = name;
+          } else {
+            document.querySelector("h2").innerHTML = original_name;
+            document.querySelector("#msgfail").children[1].innerHTML = "Saving name failed: " + data.error;
+            document.querySelector("button[type='editName']").innerHTML = `<%- include('./partials/icons/pencil-square') %>`;
+            document.querySelector("button[type='editName']").setAttribute("onclick", "activateName();");
+            document.querySelector("#msgfail").classList.remove("hidden");
+            setTimeout(() => {
+              document.querySelector("#msgfail").classList.add("hidden");
+            }, 3000);
+          }
+        });
+
+    }
 
     // save note button TODO
+    /*     https://github.com/sparksuite/simplemde-markdown-editor
+        https://taildash.tailwinddashboard.com/forms/editor.html
+        https://ckeditor.com/docs/ckeditor5/latest/api/markdown-gfm.html
+        https://prosemirror.net/examples/
+        https://prosemirror.net/examples/markdown/
+        https://github.com/MarkText/muya
+        https://github.com/sofish/pen
+        https://milkdown.dev/
+        https://github.com/nhn/tui.editor
+        https://github.com/Ionaru/easy-markdown-editor */
+
 
     //copy to clipboard button
     const copy = `<%- include("./partials/icons/clipboard-copy") %>`;
