@@ -1,51 +1,10 @@
-<!DOCTYPE html>
-<html>
+<%- include('./partials/page_start-revealjs') %>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="/css/style.css" rel="stylesheet" />
-  <link rel="stylesheet" href="css/reset.css">
-  <link rel="stylesheet" href="css/reveal.css">
-  <link rel="stylesheet" href="css/theme/white.css">
-
-  <script>
-    window.plausible = window.plausible || function() {
-      (window.plausible.q = window.plausible.q || []).push(arguments)
-    }
-  </script>
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-  <link rel="manifest" href="/site.webmanifest">
-  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#25a790">
-  <meta name="msapplication-TileColor" content="#25a790">
-  <meta name="theme-color" content="#d1f6eb">
-
-  <title>
-    🚀Build | yoyo!
-  </title>
-</head>
-
-<body>
-
-  <div class="grid grid-cols-5 gap-4">
-    <div class="col-span-1">
-      <%- include ('./partials/menu') %>
-    </div>
-    <div class="col-span-4 font-comfortaa h-screen">
-      <div class="mt-6 mr-20 h-3/4">
-        <h1 id="title" class="text-5xl font-bold my-8">How to Build a Yo-Yo Machine</h1>
-        <div id="content" class="space-y-4 h-full">
-
-          <%# CONTENT START #%>
-
-          <div class="flex items-center justify-center place-content-center h-full">
-            <div class="reveal grow h-full">
-              <div class="slides">
-                <section data-markdown>
-                  <textarea data-template>
+<div class="flex items-center justify-center place-content-center h-full">
+  <div class="reveal grow h-full">
+    <div class="slides">
+      <section data-markdown>
+        <textarea data-template>
                     ## Hardware Build Guide
                     <img src="/img/buildguide/step_00.jpg" alt="Step 00" style="margin:auto">
                     This is a presentation - you can click the arrows on the right or use your arrow keys :)
@@ -74,12 +33,12 @@
                     - [Breadboard](https://make.yoyomachines.io/Item/Breadboard)
                     - [7x Male to Male Jumper Wires](https://make.yoyomachines.io/Item/Male_to_Male_Jumper_Wires)
                   </textarea>
-                </section>
-                <section data-background-color="aquamarine">
-                  <h2>Section 1: Installing the Firmware</h2>
-                </section>
-                <section data-markdown>
-                  <textarea data-template>
+      </section>
+      <section data-background-color="aquamarine">
+        <h2>Section 1: Installing the Firmware</h2>
+      </section>
+      <section data-markdown>
+        <textarea data-template>
                     ## Download the USB driver
                     Download the USB driver so the ESP32 board can communicate with your computer. The Windows version can be found here.
                     <img data-src="/img/buildguide/step_01.jpg" alt="Step 01" style="margin:auto">
@@ -140,12 +99,12 @@
                     When the uploader finishes transferring the firmware to the device, it will say "Success!" If you have another device to set up, you can repeat this process with the new ESP32S board.
                     <img data-src="/img/buildguide/step_13.jpg" alt="Step 13" style="margin:auto">
                   </textarea>
-                </section>
-                <section data-background-color="aquamarine">
-                  <h2>Section 2: Setting up the Connection</h2>
-                </section>
-                <section data-markdown>
-                  <textarea data-template>
+      </section>
+      <section data-background-color="aquamarine">
+        <h2>Section 2: Setting up the Connection</h2>
+      </section>
+      <section data-markdown>
+        <textarea data-template>
                     ## Choosing a setup method
                     There are two main methods for setting up the network and pairing Yo–Yo Machines. In the first, both devices are set up in the same space, before one of them is sent to a remote location.
                     <img data-src="/img/buildguide/step_14.jpg" alt="Step 14" style="margin:auto">
@@ -186,12 +145,12 @@
                     Once both devices have confirmed they can connect to their respective wifi networks, the connection between the devices can be tested. This is done by pressing the “BOOT” button of one device to blink the on-board led of the other.
                     <img data-src="/img/buildguide/step_22.jpg" alt="Step 21" style="margin:auto">
                   </textarea>
-                </section>
-                <section data-background-color="aquamarine">
-                  <h2>Section 3: Building the Yo-Yo Machine</h2>
-                </section>
-                <section data-markdown>
-                  <textarea data-template>
+      </section>
+      <section data-background-color="aquamarine">
+        <h2>Section 3: Building the Yo-Yo Machine</h2>
+      </section>
+      <section data-markdown>
+        <textarea data-template>
                     ## What you will need
                     Gather your components and take a moment to identify them.
                     <img data-src="/img/buildguide/step_23.jpg" alt="Step 23" style="margin:auto">
@@ -276,12 +235,12 @@
                     Using the second Light Touch, select and send a colour back.
                     <img data-src="/img/buildguide/step_48.jpg" alt="Step 48" style="margin:auto">
                   </textarea>
-                </section>
-                <section data-background-color="aquamarine">
-                  <h2>Section 4: Optional Extras</h2>
-                </section>
-                <section data-markdown>
-                  <textarea data-template>
+      </section>
+      <section data-background-color="aquamarine">
+        <h2>Section 4: Optional Extras</h2>
+      </section>
+      <section data-markdown>
+        <textarea data-template>
                     ## Adding an external button
                     An external Button can be used instead of capacitive touch by adding a switch between pin D23 and GND on the ESP32.
                     <img data-src="/img/buildguide/step_41.jpg" alt="Step 41" style="margin:auto">
@@ -321,25 +280,24 @@
                     ## That's it! Enjoy :)
                     <img data-src="/img/buildguide/step_55.jpg" alt="Step 55" style="margin:auto">
                   </textarea>
-                </section>
-              </div>
-            </div>
-          </div>
+      </section>
+    </div>
+  </div>
+</div>
 
-          <script src="js/reveal.js"></script>
-          <script src="js/plugin/markdown/markdown.js"></script>
-          <script>
-            // More info about initialization & config:
-            // - https://revealjs.com/initialization/
-            // - https://revealjs.com/config/
-            Reveal.initialize({
-              hash: true,
-              embedded: true,
-              slideNumber: 'c/t',
-              // Learn about plugins: https://revealjs.com/plugins/
-              plugins: [RevealMarkdown]
-            });
-          </script>
+<script src="js/reveal.js"></script>
+<script src="js/plugin/markdown/markdown.js"></script>
+<script>
+  // More info about initialization & config:
+  // - https://revealjs.com/initialization/
+  // - https://revealjs.com/config/
+  Reveal.initialize({
+    hash: true,
+    embedded: true,
+    slideNumber: 'c/t',
+    // Learn about plugins: https://revealjs.com/plugins/
+    plugins: [RevealMarkdown]
+  });
+</script>
 
-          <%# CONTENT END #%>
-          <%- include('./partials/page_end') %>
+<%- include('./partials/page_end') %>
