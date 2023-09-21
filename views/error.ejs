@@ -1,12 +1,5 @@
 <%- include ('./partials/header' , {title: pageTitle }) %>
 
-<script>
-  plausible("<%= statusCode %>", {
-    props: {
-      path: document.location.pathname
-    }
-  });
-</script>
 <main class="h-screen w-full flex flex-col justify-center items-center bg-[#1A2238]">
   <h1 class="text-9xl font-extrabold text-white tracking-widest">
     <%= statusCode %>
