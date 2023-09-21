@@ -12,7 +12,7 @@ const DOMPurify = require("isomorphic-dompurify");
 const logger = require("./logger");
 const { findSocketUuid, sendLight, getNote, getYoyoByUid, updateNote, getNoteByToken } = require("./device-functions");
 const { encrypt, getKeyFromPassword, getSalt, getRandomUUID, yoyoFromToken } = require("./crypto-functions");
-const { addToStat } = require("./stat-functions");
+const { addToStat, getAllStats, getStat } = require("./stat-functions");
 
 const SECRET_KEY = process.env.SECRET_KEY || "secret";
 if (SECRET_KEY === "secret") {
@@ -103,8 +103,23 @@ app.get("/device", function (req, res) {
 	res.render("device", { error: false });
 });
 
-app.get("/stats", function (req, res) {
-	res.render("stats");
+app.get("/stats", async function (req, res) {
+	const viewed_stats = ["notes_viewed", "images_uploaded", "name_updated", "note_updated", "messages_sent"];
+
+	try {
+		const statPromises = viewed_stats.map((stat) => getStat(stat));
+		const [notes_viewed, images_uploaded, name_updated, note_updated, messages_sent] = await Promise.all(statPromises);
+		res.render("stats", {
+			notes_viewed,
+			images_uploaded,
+			name_updated,
+			note_updated,
+			messages_sent,
+		});
+	} catch (error) {
+		console.error("Error fetching stats:", error);
+		res.status(500).send("Error fetching stats");
+	}
 });
 app.get("/privacy", function (req, res) {
 	res.render("privacy");
@@ -122,6 +137,7 @@ app.use("/stats_api", cache(15 * 60), stats);
 // socket.io server
 let cacheLogins = [];
 const socketConfig = require("./socket-config");
+const { get } = require("superagent");
 const io = require("socket.io")(server);
 socketConfig(io, cacheLogins);
 
@@ -198,6 +214,7 @@ app.post("/device/upload", upload.single("image"), function (req, res) {
 	}
 	const encoded = `data:${mimetype};base64,${req.file.buffer.toString("base64")}`;
 	updateNote(yoyo, "image", encoded);
+	addToStat("images_uploaded", 1);
 	return res.json({ success: true, error: false, image: encoded });
 });
 
@@ -214,6 +231,7 @@ app.post("/device/update", function (req, res) {
 	const yoyo = yoyoFromToken(req.query.token);
 	if (req.query.field === "name" || req.query.field === "note") {
 		updateNote(yoyo, req.query.field, req.body.value);
+		addToStat(`${req.query.field}_updated`, 1);
 		return res.json({ success: true, error: false, field: req.query.field, value: req.body.value });
 	} else if (req.query.field === "override") {
 		const override = req.body.value.split(",").map((value) => value.trim());
@@ -268,6 +286,7 @@ app.get("/device/view", function (req, res) {
 			if (note === null) {
 				return res.render("device", { error: "Note not found. Please enter make sure that the link is correct." });
 			}
+			addToStat("notes_viewed", 1);
 			res.render("device-view", {
 				yoyo: note.yoyo,
 				name: note.name,

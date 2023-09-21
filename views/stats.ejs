@@ -23,34 +23,34 @@
 
     <div class="stat">
       <div class="stat-title" id="signals">Lights sent</div>
-      <div class="stat-value">TBD</div> <%# todo: hookup %>
+      <div class="stat-value"><%- messages_sent %></div>
       <div class="stat-figure tooltip tooltip-left" data-tip="How many lights have been sent with this server"><%- include('./partials/icons/light-bulb') %></div>
     </div>
   </div>
 
   <div class="stats stats-vertical lg:stats-horizontal shadow">
     <div class="stat">
-      <div class="stat-title">Links shared</div>
-      <div class="stat-value">TBD</div> <%# todo: hookup %>
+      <div class="stat-title">View-Links viewed</div>
+      <div class="stat-value"><%= notes_viewed %></div>
       <div class="stat-figure tooltip tooltip-left lg:tooltip-right" data-tip="How often view links have been opened"><%- include('./partials/icons/share') %></div>
     </div>
 
     <div class="stat">
       <div class="stat-title">Images uploaded</div>
-      <div class="stat-value">TBD</div> <%# todo: hookup %>
+      <div class="stat-value"><%= images_uploaded %></div>
       <div class="stat-figure tooltip tooltip-left lg:tooltip-right" data-tip="How often images have been replaced"><%- include('./partials/icons/camera') %></div>
     </div>
 
     <div class="stat">
       <div class="stat-title">Notes saved</div>
-      <div class="stat-value">TBD</div> <%# todo: hookup %>
+      <div class="stat-value"><%- note_updated %></div>
       <div class="stat-figure tooltip tooltip-left" data-tip="How often notes have been overwritten"><%- include('./partials/icons/pencil-square') %></div>
     </div>
 
     <div class="stat">
-      <div class="stat-title">Devices exploded</div>
-      <div class="stat-value">0</div>
-      <div class="stat-figure tooltip tooltip-left" data-tip="How many devices have exploded ... in the last 3 minutes"><%- include('./partials/icons/arrows-pointing-out') %></div>
+      <div class="stat-title">Devices renamed</div>
+      <div class="stat-value"><%- name_updated %></div>
+      <div class="stat-figure tooltip tooltip-left" data-tip="How often devices have been renamed"><%- include('./partials/icons/arrows-pointing-out') %></div>
     </div>
   </div>
 </div>

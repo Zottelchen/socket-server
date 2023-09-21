@@ -36,4 +36,19 @@ async function addToStat(stat_name, value) {
 	}
 }
 
-module.exports = { addToStat };
+async function getStat(stat_name) {
+	const stat = await Stat.findOne({ name: stat_name }).exec();
+	if (stat) {
+		return stat.stat;
+	} else {
+		return 0;
+	}
+}
+
+async function getAllStats() {
+	const stats = await Stat.find().exec();
+	console.log(stats);
+	return stats;
+}
+
+module.exports = { addToStat, getStat, getAllStats };
