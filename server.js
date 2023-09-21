@@ -212,6 +212,16 @@ app.post("/device/update", function (req, res) {
 	if (req.query.field === "name" || req.query.field === "note") {
 		updateNote(yoyo, req.query.field, req.body.value);
 		return res.json({ success: true, error: false, field: req.query.field, value: req.body.value });
+	} else if (req.query.field === "override") {
+		const override = req.body.value.split(",").map((value) => value.trim());
+		//validate override
+		for (let i = 0; i < override.length; i++) {
+			if (!/^\d+$/.test(override[i]) || override[i].length !== 10) {
+				return res.status(400).json({ success: false, error: "Override not valid. Per Yo-Yo Machine there should be 10 numbers only." });
+			}
+		}
+		updateNote(yoyo, req.query.field, override);
+		return res.json({ success: true, error: false, field: req.query.field, value: override });
 	} else {
 		return res.status(400).json({ success: false, error: "Field not allowed" });
 	}
@@ -236,6 +246,7 @@ app.get("/device/control", function (req, res) {
 					note: note.note,
 					token_view: note.token_view,
 					token_send: note.token_send,
+					override: note.override.join(", ") || "",
 					//token_connect: note.token_connect,
 					image: note.image,
 					host: `${req.protocol}://${req.headers.host}`,

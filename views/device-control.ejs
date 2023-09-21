@@ -3,6 +3,7 @@
 
 <p>Here you can edit the image, the notes and send links to your Yo-Yo machine. Additionally you can create links to send lights or share this page as read-only. We recommend to bookmark this page, so you won't have to login again.</p>
 <div id="main" class="flex flex-col gap-5 space-y-1 bg-water-leaf-200 rounded-xl p-5 dark:bg-water-leaf-900">
+
   <%# Name %>
   <div class="static flex items-center">
     <h2 class="text-3xl static inline"><%= name %></h2>
@@ -13,9 +14,17 @@
   <div class="text-1xl">Yo-Yo Number: <%= yoyo %>
     <input value="<%= yoyo %>" disabled class="hidden">
     <button type="copy" class="hover:text-water-leaf-100 tooltip-open" data-tip="Copied!"><%- include('./partials/icons/clipboard-copy') %></button>
+    <div>
+      <label class="py-2 font-semibold" for="override">Override Targets
+        <span class="tooltip" data-tip="If you want to redirect the Signal to other Yo-Yo Machines, enter their Yo-Yo Numbers here, seperated by commas. E.g. '1234567890,0987654321'. If empty, it will send to the Yo-Yo Machine your Yo-Yo Machine has saved.">
+          <%- include('./partials/icons/information-circle') %>
+        </span>:
+      </label>
+      <input id="override" class="input input-bordered input-sm" placeholder="Empty - will send to default target" value="<%=override%>" size=30>
+      <button type="override" class="hover:text-water-leaf-100 inline-block pl-2" onclick="updateOverride()"><%- include ('./partials/icons/check') %></button>
+    </div>
   </div>
 
-  <%# maybe todo: add target selection %>
 
   <%# Image & Notes %>
   <div class="flex flex-row gap-2 w-full">
@@ -67,7 +76,6 @@
     </div>
   </div>
 
-  <%# TODO: make the buttons do something %>
   <dialog id="imageUpload" class="modal">
     <div class="modal-box">
       <form method="dialog">
@@ -102,6 +110,10 @@
     <div class="alert alert-success hidden" id="namesuc">
       <%- include('./partials/icons/pencil-square') %>
       <span>Name saved successfully.</span>
+    </div>
+    <div class="alert alert-success hidden" id="overridesuc">
+      <%- include('./partials/icons/wrench-screwdriver') %>
+      <span>Override saved successfully.</span>
     </div>
   </div>
 
@@ -164,6 +176,36 @@
             document.querySelector("#btn_image").classList.remove("loading", "loading-spinner", "loading-md");
           }
         })
+    }
+
+    // update override
+    function updateOverride() {
+      const override = document.querySelector("#override").value;
+      fetch('/device/update?token=<%=token%>&field=override', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            value: override
+          }),
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            document.querySelector("#overridesuc").classList.remove("hidden");
+            setTimeout(() => {
+              document.querySelector("#overridesuc").classList.add("hidden");
+            }, 3000);
+          } else {
+            document.querySelector("#msgfail").children[1].innerHTML = "Saving override failed: " + data.error;
+            document.querySelector("#msgfail").classList.remove("hidden");
+            setTimeout(() => {
+              document.querySelector("#msgfail").classList.add("hidden");
+            }, 3000);
+          }
+        });
+
     }
 
     //light button
@@ -284,5 +326,5 @@
     });
   </script>
 
-
+  <%- include('./partials/debug', {id: 'override'}) %>
   <%- include('./partials/page_end') %>

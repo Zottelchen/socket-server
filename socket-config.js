@@ -1,7 +1,8 @@
 const User = require("./models/user");
 const Message = require("./models/message");
+const Note = require("./models/note");
 const { addToStat } = require("./stat-functions");
-const { getYoyoBySocketUUid } = require("./device-functions");
+const { getYoyoBySocketUUid, getNote, sendLight, findSocketUuid } = require("./device-functions");
 const logger = require("./logger");
 
 module.exports = (io, cacheLogins) => {
@@ -87,15 +88,12 @@ module.exports = (io, cacheLogins) => {
 		socket.on("msg", (data, id) => {
 			// Intercept message if data.macAdress in loginCache
 			let intercept = false;
-			if (cacheLogins) {
-				getYoyoBySocketUUid(socket.id).then((yoyo) => {
+			let override = false;
+
+			getYoyoBySocketUUid(socket.id).then((yoyo) => {
+				logger.info(`Checking for login cache for ${yoyo}.`);
+				if (cacheLogins) {
 					const cacheLogin = cacheLogins.find((login) => login.yoyo === yoyo);
-					if (!cacheLogin) {
-						return;
-					}
-					if (cacheLogin.returned) {
-						return;
-					}
 					if (cacheLogin) {
 						logger.info(`Intercepted message from ${yoyo}. Hue: ${data.data.hue}`);
 						intercept = true;
@@ -107,32 +105,46 @@ module.exports = (io, cacheLogins) => {
 							logger.info(`Hue is not in range: ${data.data.hue}|${cacheLogin.hue}(${cacheLogin.hue - 15}-${cacheLogin.hue + 15})`);
 						}
 					}
-
-					if (!intercept) {
-						// Forward message to pair
-						logger.info(`Got message addressed to ${data.macAddress}`);
-						User.findOne({ macAddress: data.macAddress }).exec((err, user) => {
-							if (err) {
-								logger.error("Could not search.");
-								logger.error(err);
-							} else if (user) {
-								if (user.socketUuid !== null) {
-									// Send message
-									io.to(user.socketUuid).emit("msg", data);
-									addToStat("messages_sent", 1);
-									logger.info(`Delivered message to ${user.socketUuid}`);
-								} else {
-									logger.info(`User ${user.macAddress} is disconnected.`);
-									socket.emit("partner offline");
-								}
-							} else {
-								logger.info(`User ${data.macAddress} could not be found in the database.`);
-								socket.emit("unknown user");
+				}
+				logger.info(`Checking for override for ${yoyo}.`);
+				if (!intercept) {
+					// Check if yoyo machine has an override in note
+					getNote(yoyo).then((note) => {
+						if (note.override.length > 0) {
+							logger.info(`Overrides for ${yoyo} found in note: [${note.override.join(", ")}]`);
+							override = true;
+							for (let i = 0; i < note.override.length; i++) {
+								findSocketUuid(note.override[i]).then((socketUuid) => {
+									sendLight(socketUuid, data.data.hue, io);
+								});
 							}
-						});
-					}
-				});
-			}
+						}
+					});
+				}
+				if (!intercept && !override) {
+					// Forward message to pair
+					logger.info(`Got message addressed to ${data.macAddress}`);
+					User.findOne({ macAddress: data.macAddress }).exec((err, user) => {
+						if (err) {
+							logger.error("Could not search.");
+							logger.error(err);
+						} else if (user) {
+							if (user.socketUuid !== null) {
+								// Send message
+								io.to(user.socketUuid).emit("msg", data);
+								addToStat("messages_sent", 1);
+								logger.info(`Delivered message to ${user.socketUuid}`);
+							} else {
+								logger.info(`User ${user.macAddress} is disconnected.`);
+								socket.emit("partner offline");
+							}
+						} else {
+							logger.info(`User ${data.macAddress} could not be found in the database.`);
+							socket.emit("unknown user");
+						}
+					});
+				}
+			});
 		});
 
 		socket.on("msg qos1", (data, id) => {

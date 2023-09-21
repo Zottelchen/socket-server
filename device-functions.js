@@ -59,6 +59,7 @@ async function createNote(yoyo_number) {
 		token_send: getRandomUUID() + getRandomUUID(),
 		//token_connect: getRandomUUID() + getRandomUUID(),
 		image: "/img/placeholder.jpg",
+		override: [],
 	});
 	newNote.save((err, data) => {
 		if (err) {

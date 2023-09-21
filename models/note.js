@@ -9,6 +9,7 @@ const noteSchema = new Schema({
 	token_send: String,
 	//token_connect: String,
 	image: String, //base64 encoded or path to placeholder
+	override: [String],
 });
 
 module.exports = mongoose.model("note", noteSchema);
