@@ -19,11 +19,16 @@
 
   <%# Image & Notes %>
   <div class="flex flex-row gap-2 w-full">
-    <img src="<%= image %>" alt="Yo-Yo Image" class="rounded-xl w-1/2 " id="photo">
-    <article class="prose dark:prose-invert w-1/2 rounded-md">
-      <textarea class="textarea textarea-bordered" placeholder="You can write notes about your Yo-Yo machine here! For example you can write down, which color means what to you. This even supports **markdown!**" id="editor"></textarea>
-    </article>
+    <div class="w-1/2 max-w-[50%]">
+      <img src="<%= image %>" alt="Yo-Yo Image" class="rounded-xl w-full max-h-full" id="photo">
+    </div>
+    <div class="w-1/2">
+      <article class="prose dark:prose-invert rounded-md">
+        <textarea class="textarea textarea-bordered" placeholder="You can write notes about your Yo-Yo machine here! For example, you can write down, which color means what to you. This even supports **markdown!**" id="editor"></textarea>
+      </article>
+    </div>
   </div>
+
 
   <%# Buttons %>
   <div class="flex flex-row gap-2">
