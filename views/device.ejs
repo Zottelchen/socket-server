@@ -15,12 +15,7 @@
 
 <script>
   document.getElementById('yymn').focus();
-
-  // TODO: remove this, it's just for testing
-  document.getElementById('yymn').addEventListener('input', function(e) {
-    e.target.value = e.target.value.replace(/green/g, '3358222302');
-    e.target.value = e.target.value.replace(/red/g, '1634061307');
-    e.target.value = e.target.value.replace(/blue/g, 'TODO');
-  });
 </script>
+
+<%- include('./partials/debug', {id: 'yymn'}')
 <%- include('./partials/page_end') %>
