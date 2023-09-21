@@ -11,9 +11,13 @@
   </div>
 
   <%# Device Info %>
-  <div class="text-1xl">Yo-Yo Number: <%= yoyo %>
-    <input value="<%= yoyo %>" disabled class="hidden">
-    <button type="copy" class="hover:text-water-leaf-100 tooltip-open" data-tip="Copied!"><%- include('./partials/icons/clipboard-copy') %></button>
+  <div class="text-1xl">
+    <p>Status: <%= status %></p>
+    <p>
+      Yo-Yo Number: <%= yoyo %>
+      <input value="<%= yoyo %>" disabled class="hidden">
+      <button type="copy" class="hover:text-water-leaf-100 tooltip-open" data-tip="Copied!"><%- include('./partials/icons/clipboard-copy') %></button>
+    </p>
     <div>
       <label class="py-2 font-semibold" for="override">Override Targets
         <span class="tooltip" data-tip="If you want to redirect the Signal to other Yo-Yo Machines, enter their Yo-Yo Numbers here, seperated by commas. E.g. '1234567890,0987654321'. If empty, it will send to the Yo-Yo Machine your Yo-Yo Machine has saved.">
@@ -296,8 +300,6 @@
             setTimeout(() => {
               document.querySelector("#notesuc").classList.add("hidden");
             }, 3000);
-
-            original_name = name;
           } else {
             document.querySelector("#msgfail").children[1].innerHTML = "Saving note failed: " + data.error;
             document.querySelector("#msgfail").classList.remove("hidden");

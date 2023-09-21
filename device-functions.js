@@ -35,7 +35,11 @@ async function getYoyoBySocketUuidOrUid(uidtype, identifier) {
 async function findSocketUuid(macAddress) {
 	logger.info(`Searching for socketUuid of ${macAddress}`);
 	try {
-		const user = await User.findOne({ macAddress }).exec();
+		const user = await User.findOne({ macAddress: macAddress }).exec();
+		if (!user) {
+			logger.info(`Could not find yoyo with ${macAddress}`);
+			return false;
+		}
 		logger.info(`Found socketUuid of ${macAddress}: ${user.socketUuid}`);
 		return user ? user.socketUuid : null;
 	} catch (error) {

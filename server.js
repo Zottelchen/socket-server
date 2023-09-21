@@ -152,7 +152,11 @@ app.post("/device", function (req, res) {
 	findSocketUuid(req.body.yymn).then((socketUuid) => {
 		// If the Yo-Yo Number is not in the database
 		if (socketUuid === null) {
-			res.render("device", { error: "Yo-Yo Number not found. Please enter a valid Yo-Yo Number." }); //TODO: Yoyo number not online
+			res.render("device", { error: "Yo-Yo Number is not connected. Please enter a valid Yo-Yo Number." });
+			return;
+		}
+		if (socketUuid === false) {
+			res.render("device", { error: "Yo-Yo Number not found & has never been seen by the server." });
 			return;
 		}
 
@@ -179,6 +183,25 @@ app.post("/device", function (req, res) {
 		setTimeout(() => {
 			cacheLogins = cacheLogins.filter((login) => login.time + 900000 > Date.now());
 		}, 900001);
+	});
+});
+
+app.get("/device/connection", function (req, res) {
+	const yoyo = req.query.yymn || req.query.yoyo;
+	if (!yoyo) {
+		return res.status(400).json({ success: false, error: "No Yo-Yo Number missing" });
+	}
+	if (!/^\d+$/.test(yoyo) || yoyo.length !== 10) {
+		return res.status(400).json({ success: false, error: "Yo-Yo Number not valid" });
+	}
+	findSocketUuid(yoyo).then((socketUuid) => {
+		if (socketUuid === false) {
+			return res.status(400).json({ success: false, warning: "Yo-Yo Number not found & has never been seen by the server." });
+		}
+		if (socketUuid === null) {
+			return res.status(400).json({ success: false, warning: "Yo-Yo Machine is not connected" });
+		}
+		return res.json({ success: true, error: false });
 	});
 });
 
@@ -250,18 +273,22 @@ app.post("/device/update", function (req, res) {
 
 app.get("/device/control", function (req, res) {
 	const yoyo = yoyoFromToken(req.query.token);
+	let yoyo_status = "Online!";
 	if (yoyo) {
 		// Check if Yoyo is in database
 		findSocketUuid(yoyo).then((socketUuid) => {
-			if (socketUuid === null) {
-				res.render("device", { error: "Yo-Yo Number not found. Is the device online?" });
+			if (socketUuid === false) {
+				res.render("device", { error: "Yo-Yo Number not found & has never been seen by the server." });
 				return;
+			} else if (socketUuid === null) {
+				yoyo_status = "Not connected!";
 			}
 
 			// Get Note from Database
 			getNote(yoyo).then((note) => {
 				res.render("device-control", {
 					token: req.query.token,
+					status: yoyo_status,
 					yoyo: yoyo,
 					name: note.name,
 					note: note.note,
