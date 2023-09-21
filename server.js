@@ -55,6 +55,7 @@ app.set("views", path.join(__dirname, "views"));
 
 // Setup Express body parser
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 // Caching middleware
 const cache = (duration) => {
@@ -162,30 +163,30 @@ app.post("/device", function (req, res) {
 	});
 });
 
-app.get("/device-check", function (req, res) {
+app.get("/device/check", function (req, res) {
 	const cacheLogin = cacheLogins.find((login) => login.session_uuid === req.query.session_uuid);
 	if (cacheLogin) {
 		if (cacheLogin.returned) {
 			const salt = getSalt();
 			const key = getKeyFromPassword(SECRET_KEY, salt);
 			const token = `${salt.toString("hex")}$${encrypt(cacheLogin.yoyo, key).toString("hex")}`;
-			res.json({ success: true, error: false, url: `/device-control?token=${token}` });
+			res.json({ success: true, error: false, url: `/device/control?token=${token}` });
 		} else {
 			res.json({ success: false, error: false, url: false });
 		}
 	} else {
-		res.json({ success: false, error: "No session found.", url: "/device?session_missing" });
+		res.status(400).json({ success: false, error: "No session found.", url: "/device?session_missing" });
 	}
 });
 
-app.post("/device-upload", upload.single("image"), function (req, res) {
+app.post("/device/upload", upload.single("image"), function (req, res) {
 	if (!req.query.token) {
 		return res.status(400).json({ success: false, error: "No token provided" });
 	}
-	const yoyo = yoyoFromToken(req.query.token);
 	if (!req.file) {
 		return res.status(400).json({ success: false, error: "No file uploaded" });
 	}
+	const yoyo = yoyoFromToken(req.query.token);
 	const allowedFileTypes = [".jpg", ".jpeg", ".png", ".gif", ".webp"];
 	const extension = path.extname(req.file.originalname).toLowerCase();
 	const mimetype = req.file.mimetype;
@@ -194,7 +195,7 @@ app.post("/device-upload", upload.single("image"), function (req, res) {
 	}
 	const encoded = `data:${mimetype};base64,${req.file.buffer.toString("base64")}`;
 	updateNote(yoyo, "image", encoded);
-	res.json({ success: true, error: false, image: encoded });
+	return res.json({ success: true, error: false, image: encoded });
 });
 
 app.get("/device-control", function (req, res) {
@@ -228,6 +229,7 @@ app.get("/device-control", function (req, res) {
 });
 
 app.get("/device-light", function (req, res) {
+app.get("/device/light", function (req, res) {
 	const id = req.query.id;
 	let hue = req.query.hue;
 	if (hue !== "rainbow") {
@@ -291,7 +293,7 @@ app.get("/500", function (req, res) {
 });
 /// Handle 404
 app.use((req, res) => {
-	logger.error("Error 404:", err.stack);
+	logger.warn("Error 404:", req.url);
 	res.status(404).render("error", {
 		pageTitle: "Error 404 - Page Not Found",
 		errorMessage: "Page not found. :/",

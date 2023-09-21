@@ -8,11 +8,11 @@
 </div>
 
 <script>
-  // check /device-check every 5 seconds with uid
-  // if success, redirect to /device-control
-  // if fail, redirect to /device-login
+  // check /device/check every 5 seconds with uid
+  // if success, redirect to /device/control
+  // if fail, redirect to /device/login
   setInterval(function() {
-    fetch('/device-check?session_uuid=<%= session_uuid %>', {
+    fetch('/device/check?session_uuid=<%= session_uuid %>', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
