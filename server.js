@@ -296,7 +296,8 @@ app.get("/device/light", function (req, res) {
 // Error handling
 /// Handle 500
 app.use((err, req, res, next) => {
-	logger.error("Error 500:", err.stack);
+	logger.error("Error 500:", req.url, err, err.stack);
+	console.error(err);
 	res.status(500).render("error", {
 		pageTitle: "Error 500 - Server goofed.",
 		errorMessage: "Something broke :(",

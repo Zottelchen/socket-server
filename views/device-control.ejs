@@ -1,7 +1,8 @@
-<%- include('./partials/page_start', {title:"🛠️My Device - Control Panel", page_title:"My Device"}) %>
+<%- include('./partials/page_start-simplemde', {title:"🛠️My Device - Control Panel", page_title:"My Device"}) %>
 <%- include('./partials/javascript-required') %>
+
 <p>Here you can edit the image, the notes and send links to your Yo-Yo machine. Additionally you can create links to send lights or share this page as read-only. We recommend to bookmark this page, so you won't have to login again.</p>
-<div id="main" class="flex flex-col gap-5 space-y-1 bg-water-leaf-200 rounded-xl p-5 dark:bg-water-leaf-800">
+<div id="main" class="flex flex-col gap-5 space-y-1 bg-water-leaf-200 rounded-xl p-5 dark:bg-water-leaf-900">
   <%# Name %>
   <div class="static flex items-center">
     <h2 class="text-3xl static inline"><%= name %></h2>
@@ -13,12 +14,15 @@
     <input value="<%= yoyo %>" disabled class="hidden">
     <button type="copy" class="hover:text-water-leaf-100 tooltip-open" data-tip="Copied!"><%- include('./partials/icons/clipboard-copy') %></button>
   </div>
+
   <%# maybe todo: add target selection %>
 
   <%# Image & Notes %>
-  <div class="flex flex-row gap-2">
-    <img src="<%= image %>" alt="Yo-Yo Image" class="rounded-xl w-1/2" id="photo">
-    <textarea class="textarea textarea-bordered w-1/2" placeholder="You can write notes about your Yo-Yo machine here! For example you can write down, which color means what to you."></textarea>
+  <div class="flex flex-row gap-2 w-full">
+    <img src="<%= image %>" alt="Yo-Yo Image" class="rounded-xl w-1/2 " id="photo">
+    <article class="prose dark:prose-invert w-1/2 rounded-md">
+      <textarea class="textarea textarea-bordered" placeholder="You can write notes about your Yo-Yo machine here! For example you can write down, which color means what to you. This even supports **markdown!**" id="editor"></textarea>
+    </article>
   </div>
 
   <%# Buttons %>
@@ -27,7 +31,7 @@
     <button type="rainbow" class="btn font-semibold text-white bg-red-600 hover:bg-yellow-400 focus:bg-green-400" onclick="this.blur(); sendLight('rainbow')"><%- include('./partials/icons/star') %> Send Rainbow</button>
     <div class="border-r border-water-leaf-900 gap-4"></div>
     <button type="saveImage" class="btn font-semibold text-white bg-cyan-600 hover:bg-cyan-400 focus:bg-cyan-400" onclick="this.blur(); imageUpload.showModal()"><%- include('./partials/icons/camera') %> Upload new Image</button>
-    <button type="saveNote" class="btn font-semibold text-white bg-cyan-600 hover:bg-cyan-400 focus:bg-cyan-400" onclick="this.blur()"><%- include('./partials/icons/check') %> Save Note</button>
+    <button type="saveNote" class="btn font-semibold text-white bg-cyan-600 hover:bg-cyan-400 focus:bg-cyan-400" onclick="this.blur(); saveNote()"><%- include('./partials/icons/check') %> Save Note</button>
     <div class="border-r border-water-leaf-900 gap-4"></div>
     <button type="showLinks" class="btn font-semibold text-white bg-water-leaf-600 hover:bg-water-leaf-400 focus:bg-water-leaf-400" onclick="this.blur()"><%- include('./partials/icons/eye') %> Show Links</button>
   </div>
@@ -95,6 +99,18 @@
       <span>Name saved successfully.</span>
     </div>
   </div>
+
+  <script>
+    const easyMDE = new EasyMDE({
+      autoDownloadFontAwesome: false,
+      autofocus: false,
+      element: document.getElementById('editor'),
+      lineNumbers: false,
+      spellChecker: false,
+      status: false,
+    });
+    easyMDE.value(`<%= note %>`)
+  </script>
 
   <script>
     //toggle visibility of links
@@ -214,17 +230,36 @@
 
     }
 
-    // save note button TODO
-    /*     https://github.com/sparksuite/simplemde-markdown-editor
-        https://taildash.tailwinddashboard.com/forms/editor.html
-        https://ckeditor.com/docs/ckeditor5/latest/api/markdown-gfm.html
-        https://prosemirror.net/examples/
-        https://prosemirror.net/examples/markdown/
-        https://github.com/MarkText/muya
-        https://github.com/sofish/pen
-        https://milkdown.dev/
-        https://github.com/nhn/tui.editor
-        https://github.com/Ionaru/easy-markdown-editor */
+    // save note button
+    function saveNote() {
+      const note = easyMDE.value();
+      fetch('/device/update?token=<%=token%>&field=note', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            value: note
+          }),
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            document.querySelector("#notesuc").classList.remove("hidden");
+            setTimeout(() => {
+              document.querySelector("#notesuc").classList.add("hidden");
+            }, 3000);
+
+            original_name = name;
+          } else {
+            document.querySelector("#msgfail").children[1].innerHTML = "Saving note failed: " + data.error;
+            document.querySelector("#msgfail").classList.remove("hidden");
+            setTimeout(() => {
+              document.querySelector("#msgfail").classList.add("hidden");
+            }, 3000);
+          }
+        });
+    }
 
 
     //copy to clipboard button
