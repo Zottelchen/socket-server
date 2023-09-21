@@ -6,10 +6,13 @@ const mongoose = require("mongoose");
 const mcache = require("memory-cache");
 const multer = require("multer");
 const upload = multer({});
+const marked = require("marked");
+const DOMPurify = require("isomorphic-dompurify");
 //
 const logger = require("./logger");
-const { findSocketUuid, sendLight, getNote, getYoyoByUid, updateNote } = require("./device-functions");
+const { findSocketUuid, sendLight, getNote, getYoyoByUid, updateNote, getNoteByToken } = require("./device-functions");
 const { encrypt, getKeyFromPassword, getSalt, getRandomUUID, yoyoFromToken } = require("./crypto-functions");
+const { addToStat } = require("./stat-functions");
 
 const SECRET_KEY = process.env.SECRET_KEY || "secret";
 if (SECRET_KEY === "secret") {
@@ -259,7 +262,20 @@ app.get("/device/control", function (req, res) {
 });
 
 app.get("/device/view", function (req, res) {
-	// TODO
+	const id = req.query.id;
+	if (id) {
+		getNoteByToken(id).then((note) => {
+			if (note === null) {
+				return res.render("device", { error: "Note not found. Please enter make sure that the link is correct." });
+			}
+			res.render("device-view", {
+				yoyo: note.yoyo,
+				name: note.name,
+				note: DOMPurify.sanitize(marked.parse(note.note)),
+				image: note.image,
+			});
+		});
+	}
 });
 
 app.get("/device/light", function (req, res) {

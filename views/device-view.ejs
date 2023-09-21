@@ -1,0 +1,28 @@
+<%- include('./partials/page_start', {title:"🛠️Device - View", page_title:"Device - View"}) %>
+
+<p>Here you can view the image and the note of this Yo-Yo machine.</p>
+<div id="main" class="flex flex-col gap-5 space-y-1 bg-water-leaf-200 rounded-xl p-5 dark:bg-water-leaf-900">
+
+  <%# Name %>
+  <div class="static flex items-center">
+    <h2 class="text-3xl static inline"><%= name %></h2>
+  </div>
+
+  <%# Device Info %>
+  <div class="text-1xl">Yo-Yo Number: <%= yoyo %> </div>
+
+  <%# Image & Notes %>
+  <div class="flex flex-row gap-2 w-full">
+    <div class="w-1/2 max-w-[50%]">
+      <img src="<%= image %>" alt="Yo-Yo Image" class="rounded-xl w-full max-h-full" id="photo">
+    </div>
+    <div class="w-1/2">
+      <article class="prose dark:prose-invert">
+        <%- note %>
+      </article>
+    </div>
+  </div>
+
+</div>
+
+<%- include('./partials/page_end') %>

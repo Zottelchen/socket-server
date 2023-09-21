@@ -75,6 +75,11 @@ async function getNote(yoyo_number) {
 	return note || createNote(yoyo_number);
 }
 
+async function getNoteByToken(view_token) {
+	const note = await Note.findOne({ token_view: view_token }).exec();
+	return note;
+}
+
 async function updateNote(yoyo_number, field, value) {
 	getNote(yoyo_number).then((note) => {
 		note[field] = value;
@@ -87,4 +92,4 @@ async function updateNote(yoyo_number, field, value) {
 	});
 }
 
-module.exports = { findSocketUuid, sendLight, getYoyoBySocketUUid, getNote, getYoyoByUid, getYoyoBySocketUuidOrUid, updateNote };
+module.exports = { findSocketUuid, sendLight, getYoyoBySocketUUid, getNote, getYoyoByUid, getYoyoBySocketUuidOrUid, updateNote, getNoteByToken };
