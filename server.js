@@ -315,8 +315,7 @@ app.get("/device/view", function (req, res) {
 			}
 			addToStat("notes_viewed", 1);
 			res.render("device-view", {
-				yoyo: note.yoyo,
-				name: note.name,
+				name: DOMPurify.sanitize(note.name),
 				note: DOMPurify.sanitize(marked.parse(note.note)),
 				image: note.image,
 			});
