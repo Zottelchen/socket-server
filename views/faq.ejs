@@ -1,33 +1,24 @@
 <% let qa = {
-  // todo: add proper questions and answers: https://make.yoyomachines.io/Wiki/FAQ
-  "General Questions": {
-    "What is a Yo-Yo Machine?": "A Yo-Yo Machine is a communication device that you can build yourself. It lets you send all kinds of fun signals like lights, sounds, or even simple mechanical movements. It's like a whole new way to chat without actually talking!",
-    "How do I build a Yo-Yo Machine?": "It's super easy! Just follow the instructions in our guide.",
-    "How do I connect my Yo-Yo Machine to the server?": "Once you've built your Yo-Yo Machine, you can connect it to the server by following the instructions in our guide.",
-    "How do I send signals to my Yo-Yo Machine?": "You can send signals to your Yo-Yo Machine by following the instructions in our guide.",
-    "How do I test my Yo-Yo Machine?": "You can test your Yo-Yo Machine by following the instructions in our guide.",
-    "How do I disconnect my Yo-Yo Machine from the server?": "You can disconnect your Yo-Yo Machine from the server by following the instructions in our guide.",
-    "How do I turn off my Yo-Yo Machine?": "You can turn off your Yo-Yo Machine by following the instructions in our guide.",
-    "How do I turn on my Yo-Yo Machine?": "You can turn on your Yo-Yo Machine by following the instructions in our guide.",
-    "How do I reset my Yo-Yo Machine?": "You can reset your Yo-Yo Machine by following the instructions in our guide.",
-    "How do I change the color of my Yo-Yo Machine?": "You can change the color of your Yo-Yo Machine by following the instructions in our guide.",
-    "How do I change the sound of my Yo-Yo Machine?": "You can change the sound of your Yo-Yo Machine by following the instructions in our guide.",
-    "How do I change the movement of my Yo-Yo Machine?": "You can change the movement of your Yo-Yo Machine by following the instructions in our guide.",
-    "How do I change the speed of my Yo-Yo Machine?": "You can change the speed of your Yo-Yo Machine by following the instructions in our guide.",
-    "How do I change the brightness of my Yo-Yo Machine?": "You can change the brightness of your Yo-Yo Machine by following the instructions in our guide.",
+  "Installing the YoYo Firmware Uploader": {
+    "When I download the Software, my browser says it is ‘blocked for security reasons’": "Sometimes your browser can recommend you not download the software. To get around this, you need to follow the instructions in the browser and accept the file download.",
+    "My computer wont allow me to open the YoYo Machines Firmware uploader": "This is an issue that can happen on both windows and mac. On Windows press “run anyway” to accept the application. This is sometimes hidden on the popup and appears when pressing “more info”. On Mac: To run the app, you have to go into System Preferences > Security and Privacy and press “open anyway” on the app. This is on the General Tab.",
   },
-  "Technical Questions": {
-    "What is the server?": "The server is a computer that runs the Yo-Yo Machine software. It's responsible for connecting all the Yo-Yo Machines together and making sure they can communicate with each other.",
-    "What is the client?": "The client is a computer that runs the Yo-Yo Machine software. It's responsible for connecting all the Yo-Yo Machines together and making sure they can communicate with each other.",
+  "Setting up your device network": {
+    "Nothing happens when I connect to “Yo-Yo-XXXXX” wifi network": "On some Android devices, a Notification prompt should be pressed to open up the video. See demonstration video <a href='https://www.dropbox.com/s/8zrfwn8rqlasita/VID_20200928_103611.mp4?dl=0' class='link'>here</a>. If you’re still experiencing issues, you can access the page through a webpage. This can be done by typing http://yoyo.local . For this to work on mobile, please ensure mobile data is turned off, so that the phone only uses the captive portal network.",
+    "I don’t see three blinking lights after powering up my device": "If after 2 minutes since powering up your Yo-Yo device you have not seen 3 blue blinks, check your WiFi Networks to check if your device has re-entered set up mode. This usually means there is an issue with the WiFi network.YoYo Devices can only connect to WiFi networks with a SSID (Wifi Name) length of 31 characters or less. We are looking into fixing this in the future, but currently we ask you to ensure your WiFi SSID is shorter than 32 characters.Otherwise, this could be either a networking issue or an issue with the WiFi credentials. Please check that your wifi details are correct (these are case sensitive)Make sure your Yo-Yo device is in range of your Wifi Network. Some issues with connection can happen if the device is too far out of range. If this is the case, the internal blue led will turn on constantly. When the device is back in range, the blue light will go out.",
     "What is the database?": "The database is a computer that stores all the data from the Yo-Yo Machines. It's responsible for making sure that all the data is stored securely and can be accessed by anyone who needs it.",
-    "What is the API?": "The API is a computer that stores all the data from the Yo-Yo Machines. It's responsible for making sure that all the data is stored securely and can be accessed by anyone who needs it.",
-    "What is the frontend?": "The frontend is a computer that stores all the data from the Yo-Yo Machines. It's responsible for making sure that all the data is stored securely and can be accessed by anyone who needs it.",
-    "What is the backend?": "The backend is a computer that stores all the data from the Yo-Yo Machines. It's responsible for making sure that all the data is stored securely and can be accessed by anyone who needs it.",
-    "What is the database schema?": "The database schema is a computer that stores all the data from the Yo-Yo Machines. It's responsible for making sure that all the data is stored securely and can be accessed by anyone who needs it.",
-    "What is the API schema?": "The API schema is a computer that stores all the data from the Yo-Yo Machines. It's responsible for making sure that all the data is stored securely and can be accessed by anyone who needs it.",
-    "What is the frontend schema?": "The frontend schema is a computer that stores all the data from the Yo-Yo Machines. It's responsible for making sure that all the data is stored securely and can be accessed by anyone who needs it.",
-    "What is the backend schema?": "The backend schema is a computer that stores all the data from the Yo-Yo Machines. It's responsible for making sure that all the data is stored securely and can be accessed by anyone who needs it.",
+    "How do I reset the wifi settings?": "To reset the wifi settings, use the firmware tool again and check reset wifi details."
   },
+  "Setting up your hardware": {
+    "My Board doesn’t have a red light on it": "If your board does not have a red light turn on when you plug it in, please check your USB cable and USB power source is not damaged. If this is not the case, please check that nothing is short circuiting between pins of the ESP32. Please check the wiring around the 3v3 pin and GND especially, as if these are accidentally connected together it can cause the board to not turn on.",
+    "My Addressable LEDs don’t blink on power up": "The two addressable LEDs will blink when you initially power your ESP32. One will be blue (your LED) and one will be red (remote LED) . make sure that you have wired up the LEDs correctly. Double check the wiring using the step by step guide.",
+    "My Addressable LED doesn’t blink when I press my capacitive button": " Make sure your Jumper wire used for capacitive touch is connected to pin D4 of the ESP32. This should be labelled on the ESP32.If you’re using conductive material to create an extension of the jumper wire used for capacitive touch, make sure it is firmly touching the end of the jumper wire and it is not loose.The device sets the sensitivity of the capacitive touch when the device initially turns on. Please try not to touch the capacitive touch wire in the first second of powering up as this can affect the sensitivity."
+  },
+  "Hardware hacks": {
+    "I want to increase the light of my LEDs.": "There is no certain way to do this, as the limiting factor could either be the firmware or the hardware. Both could be replaced to see if that improves things.",
+    "My LED only glows in one color": "Most likely the wrong kind of LED was used in the build.",
+    "How can I extend my Jumper cables?": "Always use proper insulation and strain relief to prevent wires from shorting or breaking! There are multiple ways: You could daisy chain female-to-female jumper wires, use header pins and dupont connectors, can solder them together and encase them in shrink tubing (be careful!) or use a ribbon cable."
+  }
 } %>
 
 
