@@ -1,21 +1,24 @@
 <%- include('./partials/page_start', {title: "☝️Privacy Policy", page_title: "Privacy Policy"}) %>
 
-<p>The following data is transmitted encrypted/unencrypted <%# TODO %> when you use Yo-Yo Machines:</p>
+<p>The following data is transmitted unencrypted when you use Yo-Yo Machines:</p>
 
 <ul class="list-disc list-inside">
-  <li>your IP</li>
-  <li>the MAC address of the Yo-Yo Machine you are sending from and the one of the one you are trying to reach</li>
+  <li>your IP - necessary to build a connection</li>
+  <li>the MAC address of the Yo-Yo Machine (in form of a simplefied Yo-Yo Number) you are sending from and the one of the one you are trying to send to</li>
+  <li>the type of Yo-Yo machine (e.g. Lighttouch)</li>
+  <li>type-specific data, e.g. the hue of the light</li>
 </ul>
 
-<p>The following data is transmitted when you use this website:</p>
+<p>The following data is transmitted when you use this website. The website will try to use an encrypted connection (HTTPS), but if it isn't available in your client for some reason, will fallback onto an unencrypted connection (HTTP).</p>
 
 <ul class="list-disc list-inside">
-  <li>TBD<%# TODO %></li>
+  <li>your IP - necessary to build a connection</li>
 </ul>
 
-<p>The data is saved for ???<%# TODO %> in the following location:</p>
+<p>The data is saved for a maximum of 1 day in the following location:</p>
+<%# @daily truncate -s 0 /var/lib/docker/containers/**/*-json.log  %>
 <ul class="list-disc list-inside">
-  <li>Falkenstein, Germany</li>
+  <li>Falkenstein, Germany @ Hetzner Online GmbH</li>
 </ul>
 
 <%- include('./partials/icons/privacy-world') %>
