@@ -1,4 +1,4 @@
-<div id="sidebar" class="xl:rounded-r-2xl flex items-start h-screen max-h-screen min-h-screen fixed w-64 bg-water-leaf-100 dark:bg-water-leaf-950 flex-col font-comfortaa font-bold">
+<div id="sidebar" class="xl:rounded-r-2xl flex items-start h-screen max-h-screen min-h-screen fixed  w-64 bg-water-leaf-100 dark:bg-water-leaf-950 flex-col font-comfortaa font-bold">
   <div class="xl:flex flex p-6 items-center space-x-6 drop-shadow-xl">
     <%- include ('./icons/logo') %><p class="text-6xl leading-10 text-water-leaf-700 font-economica tracking-tight">yoyo!</p>
   </div>
@@ -43,4 +43,38 @@
       <p class="text-base leading-4">About</p>
     </a>
   </div>
+
+  <div class="fixed bottom-2 left-24 w-10 h-10 bg-water-leaf-500 dark:bg-water-leaf-900 text-white rounded-full flex items-center justify-center cursor-pointer hover:bg-water-leaf-600 dark:hover:bg-water-leaf-800">
+    <label class="swap swap-rotate ">
+      <input type="checkbox" class="hidden" id="darkmode" />
+      <div class="swap-on">
+        <%- include('./icons/sun') %>
+      </div>
+      <div class="swap-off">
+        <%- include('./icons/moon') %>
+      </div>
+    </label>
+  </div>
+
+  <script>
+    const toggleSwitch = document.querySelector('#darkmode');
+    const currentTheme = localStorage.theme;
+
+    if (currentTheme) {
+      toggleSwitch.checked = currentTheme === 'light';
+    }
+
+    function switchTheme(e) {
+      if (e.target.checked) {
+        localStorage.theme = 'light'
+        refreshView();
+      } else {
+        localStorage.theme = 'dark'
+        refreshView();
+      }
+    }
+
+    toggleSwitch.addEventListener('change', switchTheme, false);
+  </script>
+
 </div>
