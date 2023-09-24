@@ -55,7 +55,7 @@
   <% for (let [question, answer] of Object.entries(questions)) { %>
   <li>
     <h3 id="<%= question %>" class="text-xl font-bold my-3"><%= question %></h3>
-    <p class="ml-2"><%= answer %></p>
+    <p class="ml-2"><%- answer %></p>
   </li>
   <% } %>
 </ul>
