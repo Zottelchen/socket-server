@@ -275,6 +275,8 @@ app.get("/device/control", function (req, res) {
 	const yoyo = yoyoFromToken(req.query.token);
 	let yoyo_status = "Online!";
 	if (yoyo) {
+		// Remove login from cache
+		cacheLogins = cacheLogins.filter((login) => login.yoyo !== yoyo);
 		// Check if Yoyo is in database
 		findSocketUuid(yoyo).then((socketUuid) => {
 			if (socketUuid === false) {
