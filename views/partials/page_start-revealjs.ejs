@@ -17,6 +17,24 @@
   <meta name="msapplication-TileColor" content="#25a790">
   <meta name="theme-color" content="#d1f6eb">
 
+  <script>
+    function refreshView() {
+
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark')
+        document.querySelector('#sidebar').classList.add('dark')
+        document.querySelector('html').setAttribute('data-theme', 'dark');
+        console.log('refreshing view: dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+        document.querySelector('#sidebar').classList.remove('dark')
+        document.querySelector('html').setAttribute('data-theme', 'light');
+        console.log('refreshing view: light')
+      }
+    }
+    refreshView();
+  </script>
+
   <title>
     🚀Build | yoyo!
   </title>
