@@ -94,7 +94,7 @@ module.exports = (io, cacheLogins) => {
 				logger.info(`Checking for login cache for ${yoyo}.`);
 				if (cacheLogins) {
 					const cacheLogin = cacheLogins.find((login) => login.yoyo === yoyo);
-					if (cacheLogin) {
+					if (cacheLogin && !cacheLogin.returned) {
 						logger.info(`Intercepted message from ${yoyo}. Hue: ${data.data.hue}`);
 						intercept = true;
 						// if data.data.hue is in 10% range of cacheLogin.hue, set cacheLogin.returned to true
@@ -106,9 +106,10 @@ module.exports = (io, cacheLogins) => {
 						}
 					}
 				}
-				logger.info(`Checking for override for ${yoyo}.`);
+
 				if (!intercept) {
 					// Check if yoyo machine has an override in note
+					logger.info(`Checking for override for ${yoyo}.`);
 					getNote(yoyo).then((note) => {
 						if (note.override.length > 0) {
 							logger.info(`Overrides for ${yoyo} found in note: [${note.override.join(", ")}]`);

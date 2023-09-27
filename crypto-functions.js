@@ -106,7 +106,7 @@ function yoyoFromToken(token) {
 	const salt = token.split("$")[0];
 	const key = getKeyFromPassword(SECRET_KEY, Buffer.from(salt, "hex"));
 	const encrypted = Buffer.from(token.split("$")[1], "hex");
-	return decrypt(encrypted, key);
+	return `${decrypt(encrypted, key)}`;
 }
 
 module.exports = { encrypt, decrypt, getRandomKey, getSalt, getKeyFromPassword, getRandomUUID, yoyoFromToken };
